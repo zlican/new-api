@@ -455,7 +455,7 @@ const SiderBar = ({ onNavigate = () => {} }) => {
               <Divider className='sidebar-divider' />
               <div>
                 {!collapsed && (
-                  <div className='sidebar-group-label'>{t('控制台')}</div>
+                  <div className='sidebar-group-label'>{t('面板')}</div>
                 )}
                 {workspaceItems.map((item) => renderNavItem(item))}
               </div>

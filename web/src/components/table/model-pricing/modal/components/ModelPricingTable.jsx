@@ -17,11 +17,27 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React from 'react';
-import { Typography, Table, Tag } from '@douyinfe/semi-ui';
+import React, { useMemo } from 'react';
+import { Table, Tag, Typography } from '@douyinfe/semi-ui';
 import { calculateModelPrice } from '../../../../../helpers';
 
 const { Text } = Typography;
+
+const getBillingType = (modelData, t) => {
+  if (modelData?.billing_mode === 'tiered_expr') return t('动态计费');
+  if (modelData?.quota_type === 0) return t('按量计费');
+  if (modelData?.quota_type === 1) return t('按次计费');
+  return '-';
+};
+
+const getBillingTagColor = (text, t) => {
+  if (text === t('按量计费')) return 'violet';
+  if (text === t('按次计费')) return 'teal';
+  if (text === t('动态计费')) return 'amber';
+  return 'white';
+};
+
+const formatPrice = (value) => value || '-';
 
 const ModelPricingTable = ({
   modelData,
@@ -31,106 +47,91 @@ const ModelPricingTable = ({
   tokenUnit,
   displayPrice,
   usableGroup,
-  autoGroups = [],
   t,
 }) => {
-  const modelEnableGroups = Array.isArray(modelData?.enable_groups)
-    ? modelData.enable_groups
-    : [];
-  const autoChain = autoGroups.filter((g) => modelEnableGroups.includes(g));
-  const renderGroupPriceTable = () => {
-    // 仅展示模型可用的分组：模型 enable_groups 与用户可用分组的交集
+  const tableData = useMemo(() => {
+    if (!modelData) return [];
 
+    const modelEnableGroups = Array.isArray(modelData.enable_groups)
+      ? modelData.enable_groups
+      : [];
     const availableGroups = Object.keys(usableGroup || {})
-      .filter((g) => g !== '')
-      .filter((g) => g !== 'auto')
-      .filter((g) => modelEnableGroups.includes(g));
-
-    // 准备表格数据
-    const tableData = availableGroups.map((group) => {
-      const priceData = modelData
-        ? calculateModelPrice({
-            record: modelData,
-            selectedGroup: group,
-            groupRatio,
-            tokenUnit,
-            displayPrice,
-            currency,
-            quotaDisplayType: siteDisplayType,
-          })
-        : { inputPrice: '-', outputPrice: '-', price: '-' };
-
-      // 获取分组倍率
-      const groupRatioValue =
-        groupRatio && groupRatio[group] ? groupRatio[group] : 1;
-
-      return {
-        key: group,
-        group: group,
-        ratio: groupRatioValue,
-        billingType:
-          modelData?.billing_mode === 'tiered_expr'
-            ? t('动态计费')
-            : modelData?.quota_type === 0
-              ? t('按量计费')
-              : modelData?.quota_type === 1
-                ? t('按次计费')
-                : '-',
-        inputPrice: priceData.inputPrice || '-',
-        outputPrice: priceData.completionPrice || priceData.price || '-',
-        cachePrice: priceData.cachePrice || '-',
-      };
+      .filter((group) => group && group !== 'auto')
+      .filter((group) => modelEnableGroups.length === 0 || modelEnableGroups.includes(group));
+    const selectedGroup = availableGroups[0] || modelEnableGroups[0] || 'all';
+    const priceData = calculateModelPrice({
+      record: modelData,
+      selectedGroup,
+      groupRatio: groupRatio || {},
+      tokenUnit,
+      displayPrice,
+      currency,
+      quotaDisplayType: siteDisplayType,
     });
 
-    const columns = [
+    return [
       {
-        title: t('模型名称'),
-        dataIndex: 'modelName',
-        render: () => <Text strong>{modelData?.model_name || '-'}</Text>,
-      },
-      {
-        title: t('计费类型'),
-        dataIndex: 'billingType',
-        render: (text) => {
-          let color = 'white';
-          if (text === t('按量计费')) color = 'violet';
-          else if (text === t('按次计费')) color = 'teal';
-          else if (text === t('动态计费')) color = 'amber';
-          return (
-            <Tag color={color} size='small' shape='circle'>
-              {text || '-'}
-            </Tag>
-          );
-        },
-      },
-      {
-        title: t('输入价格'),
-        dataIndex: 'inputPrice',
-        render: (text) => <Text strong>{text || '-'}</Text>,
-      },
-      {
-        title: t('补全价格'),
-        dataIndex: 'outputPrice',
-        render: (text) => <Text strong>{text || '-'}</Text>,
-      },
-      {
-        title: t('缓存读取价格'),
-        dataIndex: 'cachePrice',
-        render: (text) => <Text strong>{text || '-'}</Text>,
-      },
-      {
-        title: t('分组'),
-        dataIndex: 'group',
-        render: (text) => (
-          <Tag color='white' size='small' shape='circle'>
-            {text}
-            {t('分组')}
-          </Tag>
-        ),
+        key: modelData.model_name,
+        modelName: modelData.model_name || '-',
+        billingType: getBillingType(modelData, t),
+        inputPrice: formatPrice(priceData.inputPrice || priceData.price),
+        outputPrice: formatPrice(priceData.completionPrice || priceData.price),
+        cachePrice: formatPrice(priceData.cachePrice),
       },
     ];
+  }, [
+    modelData,
+    usableGroup,
+    groupRatio,
+    tokenUnit,
+    displayPrice,
+    currency,
+    siteDisplayType,
+    t,
+  ]);
 
-    return (
+  const columns = [
+    {
+      title: t('模型名称'),
+      dataIndex: 'modelName',
+      width: 220,
+      render: (text) => <Text strong ellipsis={{ showTooltip: true }}>{text}</Text>,
+    },
+    {
+      title: t('计费类型'),
+      dataIndex: 'billingType',
+      width: 110,
+      render: (text) => (
+        <Tag color={getBillingTagColor(text, t)} size='small' shape='circle'>
+          {text || '-'}
+        </Tag>
+      ),
+    },
+    {
+      title: t('输入价格'),
+      dataIndex: 'inputPrice',
+      width: 120,
+      render: (text) => <Text strong>{text}</Text>,
+    },
+    {
+      title: t('补全价格'),
+      dataIndex: 'outputPrice',
+      width: 120,
+      render: (text) => <Text strong>{text}</Text>,
+    },
+    {
+      title: t('缓存读取价格'),
+      dataIndex: 'cachePrice',
+      width: 140,
+      render: (text) => <Text strong>{text}</Text>,
+    },
+  ];
+
+  return (
+    <div className='model-detail-pricing-section'>
+      <div className='mb-4'>
+        <Text className='text-lg font-medium'>{t('模型与价格详细')}</Text>
+      </div>
       <Table
         dataSource={tableData}
         columns={columns}
@@ -138,35 +139,8 @@ const ModelPricingTable = ({
         size='small'
         bordered={false}
         className='model-detail-price-table !rounded-lg'
-        scroll={{ x: 'max-content' }}
+        scroll={{ x: 720 }}
       />
-    );
-  };
-
-  return (
-    <div>
-      <div className='mb-4'>
-        <Text className='text-lg font-medium'>{t('模型与价格详细')}</Text>
-        <div className='text-xs text-gray-600'>
-          {t('横向展示模型名称、计费类型与关键价格')}
-        </div>
-      </div>
-      {autoChain.length > 0 && (
-        <div className='flex flex-wrap items-center gap-1 mb-4'>
-          <span className='text-sm text-gray-600'>{t('auto分组调用链路')}</span>
-          <span className='text-sm'>→</span>
-          {autoChain.map((g, idx) => (
-            <React.Fragment key={g}>
-              <Tag color='white' size='small' shape='circle'>
-                {g}
-                {t('分组')}
-              </Tag>
-              {idx < autoChain.length - 1 && <span className='text-sm'>→</span>}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-      {renderGroupPriceTable()}
     </div>
   );
 };

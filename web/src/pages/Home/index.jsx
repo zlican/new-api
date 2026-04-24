@@ -17,18 +17,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Button, Input, Skeleton } from '@douyinfe/semi-ui';
-import { IconCopy, IconExternalOpen, IconPlay } from '@douyinfe/semi-icons';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Skeleton } from '@douyinfe/semi-ui';
 import { Link } from 'react-router-dom';
 import {
   API,
   calculateModelPrice,
-  copy,
   getLobeHubIcon,
-  showSuccess,
 } from '../../helpers';
-import { StatusContext } from '../../context/Status';
 import NoticeModal from '../../components/layout/NoticeModal';
 
 const preferredModels = [
@@ -46,14 +42,14 @@ const footerGroups = [
     links: [
       { label: '定价', to: '/pricing' },
       { label: '文档', href: 'https://aiberm.com' },
-      { label: '控制台', to: '/console' },
+      { label: '面板', to: '/console' },
     ],
   },
   {
     title: '公司',
     links: [
       { label: '关于', to: '/about' },
-      { label: '合作伙伴', href: 'mailto:support@aiberm.com' },
+      { label: '合作伙伴', href: 'https://aiberm.com' },
       { label: '状态', href: 'https://aiberm.com' },
     ],
   },
@@ -62,7 +58,7 @@ const footerGroups = [
     links: [
       { label: '隐私', to: '/privacy-policy' },
       { label: '条款', to: '/user-agreement' },
-      { label: '退款政策', href: 'mailto:support@aiberm.com' },
+      { label: '退款政策', href: 'https://aiberm.com' },
       { label: '合规使用', to: '/user-agreement' },
     ],
   },
@@ -93,12 +89,9 @@ const formatPercent = (value) => {
 const getVendorLabel = (model) => model.vendor_name || model.vendor || 'AI';
 
 const Home = () => {
-  const [statusState] = useContext(StatusContext);
   const [noticeVisible, setNoticeVisible] = useState(false);
   const [featuredModels, setFeaturedModels] = useState([]);
   const [loadingModels, setLoadingModels] = useState(true);
-  const serverAddress = statusState?.status?.server_address || 'https://aiberm.com';
-  const docsLink = statusState?.status?.docs_link || 'https://aiberm.com';
 
   const displayPrice = (price) => `$${Number(price || 0).toFixed(3)}`;
 
@@ -185,11 +178,6 @@ const Home = () => {
 
   const modelsToShow = featuredModels.length > 0 ? featuredModels : fallbackModels;
 
-  const handleCopyBaseURL = async () => {
-    const ok = await copy(serverAddress);
-    if (ok) showSuccess('已复制 API Base URL');
-  };
-
   const renderLink = (link) => {
     if (link.to) return <Link to={link.to}>{link.label}</Link>;
     return (
@@ -208,29 +196,6 @@ const Home = () => {
           <div className='cheapai-badge'>CheapAI API Platform</div>
           <h1>让所有人使用上更 Cheap 的 AI</h1>
           <p>为开发者提供有折扣的 AI API，统一接入，透明定价。</p>
-          <div className='cheapai-actions'>
-            <Link to='/console'>
-              <Button theme='solid' type='primary' size='large' icon={<IconPlay />}>
-                开始使用
-              </Button>
-            </Link>
-            <Button
-              theme='outline'
-              type='tertiary'
-              size='large'
-              icon={<IconExternalOpen />}
-              onClick={() => window.open(docsLink, '_blank')}
-            >
-              查看文档
-            </Button>
-          </div>
-          <div className='cheapai-base-url'>
-            <div>
-              <span>API Base URL</span>
-              <Input readonly value={serverAddress} />
-            </div>
-            <Button icon={<IconCopy />} onClick={handleCopyBaseURL} />
-          </div>
         </div>
       </section>
 
@@ -283,7 +248,6 @@ const Home = () => {
         <div className='cheapai-footer-brand'>
           <h2>CheapAI</h2>
           <p>为开发者提供统一的 AI API 平台，透明定价。</p>
-          <a href='mailto:support@aiberm.com'>support@aiberm.com</a>
         </div>
         <div className='cheapai-footer-links'>
           {footerGroups.map((group) => (
@@ -295,7 +259,6 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <div className='cheapai-copyright'>© 2026 CheapAI. All rights reserved.</div>
       </footer>
     </div>
   );

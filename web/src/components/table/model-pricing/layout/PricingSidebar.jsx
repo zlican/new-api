@@ -18,49 +18,21 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
-import PricingVendors from '../filter/PricingVendors';
+import { Button } from '@douyinfe/semi-ui';
+import { IconFilter } from '@douyinfe/semi-icons';
 
-import { usePricingFilterCounts } from '../../../../hooks/model-pricing/usePricingFilterCounts';
-
-const PricingSidebar = ({
-  filterGroup,
-  filterQuotaType,
-  filterEndpointType,
-  filterVendor,
-  setFilterVendor,
-  filterTag,
-  loading,
-  t,
-  ...categoryProps
-}) => {
-  const {
-    vendorModels,
-  } = usePricingFilterCounts({
-    models: categoryProps.models,
-    filterGroup,
-    filterQuotaType,
-    filterEndpointType,
-    filterVendor,
-    filterTag,
-    searchValue: categoryProps.searchValue,
-  });
-
+const PricingSidebar = ({ setShowFilterModal, t }) => {
   return (
     <div className='cyber-pricing-filterbar p-2'>
-      <div className='cyber-pricing-filter-title flex items-center justify-between mb-6'>
-        <div className='text-lg font-semibold text-gray-800'>{t('全部模型')}</div>
-        <div className='text-xs text-gray-500'>{t('按模型厂商快速筛选')}</div>
-      </div>
-
-      <PricingVendors
-        filterVendor={filterVendor}
-        setFilterVendor={setFilterVendor}
-        models={vendorModels}
-        allModels={categoryProps.models}
-        loading={loading}
-        t={t}
-      />
-
+      <Button
+        icon={<IconFilter />}
+        theme='solid'
+        type='primary'
+        className='pricing-filter-button'
+        onClick={() => setShowFilterModal?.(true)}
+      >
+        {t('筛选')}
+      </Button>
     </div>
   );
 };

@@ -17,16 +17,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React from 'react';
+import React, { useState } from 'react';
 import PricingSidebar from '../PricingSidebar';
 import PricingTopSection from '../header/PricingTopSection';
 import PricingView from './PricingView';
+import PricingFilterModal from '../../modal/PricingFilterModal';
 
 const PricingContent = ({ isMobile, sidebarProps, ...props }) => {
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
   return (
     <div
       className={isMobile ? 'pricing-content-mobile' : 'pricing-scroll-hide'}
     >
+      <PricingFilterModal
+        visible={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        sidebarProps={sidebarProps}
+        t={sidebarProps.t}
+      />
+
       {/* 固定的顶部区域（分类介绍 + 搜索和操作） */}
       <div className='pricing-search-header'>
         <PricingTopSection
@@ -47,7 +57,10 @@ const PricingContent = ({ isMobile, sidebarProps, ...props }) => {
       </div>
 
       <div className='cyber-pricing-top-filters pricing-scroll-hide'>
-        <PricingSidebar {...sidebarProps} />
+        <PricingSidebar
+          {...sidebarProps}
+          setShowFilterModal={setShowFilterModal}
+        />
       </div>
 
       {/* 可滚动的内容区域 */}

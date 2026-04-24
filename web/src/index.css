@@ -2902,3 +2902,50 @@ textarea::placeholder,
     padding-top: 64px;
   }
 }
+
+/* CheapAI model page final refinements */
+.cyber-pricing-top-filters {
+  padding: 8px !important;
+  overflow: visible !important;
+}
+
+.cyber-pricing-filterbar {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  grid-template-columns: none !important;
+  min-width: 0 !important;
+}
+
+.pricing-filter-button {
+  width: 128px !important;
+  min-width: 128px !important;
+  height: 40px !important;
+  border-radius: 999px !important;
+}
+
+.model-detail-pricing-section {
+  overflow-x: auto;
+}
+
+.model-detail-price-table {
+  min-width: 720px;
+  border: 1px solid rgba(96, 165, 250, 0.16);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.model-detail-price-table .semi-table-thead > .semi-table-row > .semi-table-row-head {
+  background: rgba(15, 23, 42, 0.92) !important;
+  color: rgba(226, 232, 240, 0.88) !important;
+}
+
+.model-detail-price-table .semi-table-tbody > .semi-table-row > .semi-table-row-cell {
+  background: rgba(2, 6, 23, 0.62) !important;
+}
+
+.cheapai-actions,
+.cheapai-base-url,
+.cheapai-copyright {
+  display: none !important;
+}

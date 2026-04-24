@@ -17,24 +17,18 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { memo, useCallback } from 'react';
-import { Input, Button } from '@douyinfe/semi-ui';
-import { IconSearch, IconFilter } from '@douyinfe/semi-icons';
+import React, { memo } from 'react';
+import { Input } from '@douyinfe/semi-ui';
+import { IconSearch } from '@douyinfe/semi-icons';
 
 const SearchActions = memo(
   ({
     handleChange,
     handleCompositionStart,
     handleCompositionEnd,
-    isMobile = false,
     searchValue = '',
-    setShowFilterModal,
     t,
   }) => {
-    const handleFilterClick = useCallback(() => {
-      setShowFilterModal?.(true);
-    }, [setShowFilterModal]);
-
     return (
       <div className='flex items-center gap-3 w-full'>
         <div className='flex-1'>
@@ -50,17 +44,6 @@ const SearchActions = memo(
             className='pricing-model-search'
           />
         </div>
-
-        {isMobile && (
-          <Button
-            theme='outline'
-            type='tertiary'
-            icon={<IconFilter />}
-            onClick={handleFilterClick}
-          >
-            {t('筛选')}
-          </Button>
-        )}
       </div>
     );
   },
