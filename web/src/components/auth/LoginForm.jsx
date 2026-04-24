@@ -947,7 +947,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className='relative overflow-hidden bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='cyber-auth-page relative overflow-hidden bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
       {/* 背景模糊晕染球 */}
       <div
         className='blur-ball blur-ball-indigo'
@@ -957,7 +957,18 @@ const LoginForm = () => {
         className='blur-ball blur-ball-teal'
         style={{ top: '50%', left: '-120px' }}
       />
-      <div className='w-full max-w-sm mt-[60px]'>
+      <div className='cyber-auth-shell w-full max-w-sm mt-[60px]'>
+        <div className='cyber-auth-brief' aria-hidden='true'>
+          <div className='cyber-auth-kicker'>ACCESS NODE</div>
+          <div className='cyber-auth-headline'>Neural Gateway</div>
+          <div className='cyber-auth-copy'>Secure API console uplink · realtime quota telemetry · multi-provider relay matrix</div>
+          <div className='cyber-auth-metrics'>
+            <span>40+ Providers</span>
+            <span>JWT / OAuth</span>
+            <span>Live Billing</span>
+          </div>
+        </div>
+        <div className='cyber-auth-card-slot'>
         {showEmailLogin ||
         !hasOAuthLoginOptions
           ? renderEmailLoginForm()
@@ -975,6 +986,7 @@ const LoginForm = () => {
             />
           </div>
         )}
+        </div>
       </div>
     </div>
   );

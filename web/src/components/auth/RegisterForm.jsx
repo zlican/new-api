@@ -770,7 +770,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className='relative overflow-hidden bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
+    <div className='cyber-auth-page relative overflow-hidden bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
       {/* 背景模糊晕染球 */}
       <div
         className='blur-ball blur-ball-indigo'
@@ -780,7 +780,18 @@ const RegisterForm = () => {
         className='blur-ball blur-ball-teal'
         style={{ top: '50%', left: '-120px' }}
       />
-      <div className='w-full max-w-sm mt-[60px]'>
+      <div className='cyber-auth-shell w-full max-w-sm mt-[60px]'>
+        <div className='cyber-auth-brief' aria-hidden='true'>
+          <div className='cyber-auth-kicker'>CREATE IDENTITY</div>
+          <div className='cyber-auth-headline'>Join The Relay</div>
+          <div className='cyber-auth-copy'>Issue credentials · bind federated login · activate quota routing in one console</div>
+          <div className='cyber-auth-metrics'>
+            <span>Passkey Ready</span>
+            <span>OAuth Mesh</span>
+            <span>Fast Onboarding</span>
+          </div>
+        </div>
+        <div className='cyber-auth-card-slot'>
         {showEmailRegister ||
         !hasOAuthRegisterOptions
           ? renderEmailRegisterForm()
@@ -797,6 +808,7 @@ const RegisterForm = () => {
             />
           </div>
         )}
+        </div>
       </div>
     </div>
   );

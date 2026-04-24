@@ -76,7 +76,7 @@ const CardPro = ({
     if (!hasContent) return null;
 
     return (
-      <div className='flex flex-col w-full'>
+      <div className={`cyber-cardpro-header cyber-cardpro-${type} flex flex-col w-full`}>
         {/* 统计信息区域 - 用于type2 */}
         {type === 'type2' && statsArea && <>{statsArea}</>}
 
@@ -114,7 +114,7 @@ const CardPro = ({
 
         {/* 操作按钮和搜索表单的容器 */}
         <div
-          className={`flex flex-col gap-2 ${isMobile && !showMobileActions ? 'hidden' : ''}`}
+          className={`cyber-cardpro-controls flex flex-col gap-2 ${isMobile && !showMobileActions ? 'hidden' : ''}`}
         >
           {/* 操作按钮区域 - 用于type1和type3 */}
           {(type === 'type1' || type === 'type3') &&
@@ -127,14 +127,14 @@ const CardPro = ({
                 </React.Fragment>
               ))
             ) : (
-              <div className='w-full'>{actionsArea}</div>
+              <div className='cyber-cardpro-actions w-full'>{actionsArea}</div>
             ))}
 
           {/* 当同时存在操作区和搜索区时，插入分隔线 */}
           {actionsArea && searchArea && <Divider />}
 
           {/* 搜索表单区域 - 所有类型都可能有 */}
-          {searchArea && <div className='w-full'>{searchArea}</div>}
+          {searchArea && <div className='cyber-cardpro-search w-full'>{searchArea}</div>}
         </div>
       </div>
     );
@@ -148,7 +148,7 @@ const CardPro = ({
 
     return (
       <div
-        className={`flex w-full pt-4 border-t ${isMobile ? 'justify-center' : 'justify-between items-center'}`}
+        className={`cyber-cardpro-footer flex w-full pt-4 border-t ${isMobile ? 'justify-center' : 'justify-between items-center'}`}
         style={{ borderColor: 'var(--semi-color-border)' }}
       >
         {paginationArea}
@@ -160,7 +160,7 @@ const CardPro = ({
 
   return (
     <Card
-      className={`table-scroll-card !rounded-2xl ${className}`}
+      className={`cyber-cardpro table-scroll-card !rounded-2xl ${className}`}
       title={headerContent}
       footer={footerContent}
       shadows={shadows}

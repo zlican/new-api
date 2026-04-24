@@ -193,8 +193,8 @@ const Setting = () => {
     }
   }, [location.search]);
   return (
-    <div className='mt-[60px] px-2'>
-      <Layout>
+    <div className='cyber-setting-page mt-[60px] px-2'>
+      <Layout className='cyber-setting-layout'>
         <Layout.Content>
           <Tabs
             type='card'

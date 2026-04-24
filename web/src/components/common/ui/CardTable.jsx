@@ -64,6 +64,7 @@ const CardTable = ({
 
     return (
       <Table
+        className='cyber-data-table'
         columns={columns}
         dataSource={dataSource}
         loading={loading}
@@ -115,7 +116,7 @@ const CardTable = ({
       );
 
       return (
-        <Card key={key} className='!rounded-2xl shadow-sm'>
+        <Card key={key} className='cyber-mobile-row !rounded-2xl shadow-sm'>
           <Skeleton loading={true} active placeholder={placeholder}></Skeleton>
         </Card>
       );
@@ -139,7 +140,7 @@ const CardTable = ({
       (!tableProps.rowExpandable || tableProps.rowExpandable(record));
 
     return (
-      <Card key={rowKeyVal} className='!rounded-2xl shadow-sm'>
+      <Card key={rowKeyVal} className='cyber-mobile-row !rounded-2xl shadow-sm'>
         {columns.map((col, colIdx) => {
           if (
             tableProps?.visibleColumns &&

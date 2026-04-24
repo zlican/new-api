@@ -459,11 +459,11 @@ const Playground = () => {
 
   return (
     <PlaygroundProvider value={playgroundContextValue}>
-      <div className='h-full'>
-        <Layout className='h-full bg-transparent flex flex-col md:flex-row'>
+      <div className='cyber-playground h-full'>
+        <Layout className='cyber-playground-layout h-full bg-transparent flex flex-col md:flex-row'>
           {(showSettings || !isMobile) && (
             <Layout.Sider
-              className={`
+              className={`cyber-playground-settings
               bg-transparent border-r-0 flex-shrink-0 overflow-auto mt-[60px]
               ${
                 isMobile
@@ -496,9 +496,9 @@ const Playground = () => {
             </Layout.Sider>
           )}
 
-          <Layout.Content className='relative flex-1 overflow-hidden'>
-            <div className='overflow-hidden flex flex-col lg:flex-row h-[calc(100vh-66px)] mt-[60px]'>
-              <div className='flex-1 flex flex-col'>
+          <Layout.Content className='cyber-playground-content relative flex-1 overflow-hidden'>
+            <div className='cyber-playground-grid overflow-hidden flex flex-col lg:flex-row h-[calc(100vh-66px)] mt-[60px]'>
+              <div className='cyber-playground-chat flex-1 flex flex-col'>
                 <ChatArea
                   chatRef={chatRef}
                   message={message}
@@ -520,7 +520,7 @@ const Playground = () => {
 
               {/* 调试面板 - 桌面端 */}
               {showDebugPanel && !isMobile && (
-                <div className='w-96 flex-shrink-0 h-full'>
+                <div className='cyber-playground-debug w-96 flex-shrink-0 h-full'>
                   <OptimizedDebugPanel
                     debugData={debugData}
                     activeDebugTab={activeDebugTab}
@@ -534,7 +534,7 @@ const Playground = () => {
 
             {/* 调试面板 - 移动端覆盖层 */}
             {showDebugPanel && isMobile && (
-              <div className='fixed top-0 left-0 right-0 bottom-0 z-[1000] bg-white overflow-auto shadow-lg'>
+              <div className='cyber-playground-mobile-debug fixed top-0 left-0 right-0 bottom-0 z-[1000] bg-white overflow-auto shadow-lg'>
                 <OptimizedDebugPanel
                   debugData={debugData}
                   activeDebugTab={activeDebugTab}

@@ -197,6 +197,7 @@ const PageLayout = () => {
           </Sider>
         )}
         <Layout
+          className='app-main-panel'
           style={{
             marginLeft: isMobile
               ? '0'
@@ -209,6 +210,7 @@ const PageLayout = () => {
           }}
         >
           <Content
+            className='app-content-shell'
             style={{
               flex: '1 0 auto',
               overflowY: isMobile ? 'visible' : 'hidden',

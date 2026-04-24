@@ -38,8 +38,8 @@ const HeaderLogo = ({
   }
 
   return (
-    <Link to='/' className='group flex items-center gap-2'>
-      <div className='relative w-8 h-8 md:w-8 md:h-8'>
+    <Link to='/' className='cyber-logo group flex items-center gap-2'>
+      <div className='cyber-logo-mark relative w-8 h-8 md:w-8 md:h-8'>
         <SkeletonWrapper loading={isLoading || !logoLoaded} type='image' />
         <img
           src={logo}
@@ -57,7 +57,7 @@ const HeaderLogo = ({
           >
             <Typography.Title
               heading={4}
-              className='!text-lg !font-semibold !mb-0'
+              className='cyber-logo-title !text-lg !font-semibold !mb-0'
             >
               {systemName}
             </Typography.Title>
