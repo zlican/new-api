@@ -19,7 +19,6 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Avatar,
   Typography,
   Card,
   Button,
@@ -36,16 +35,7 @@ import {
   TabPane,
 } from '@douyinfe/semi-ui';
 import { SiAlipay, SiWechat, SiStripe } from 'react-icons/si';
-import {
-  CreditCard,
-  Coins,
-  Wallet,
-  BarChart2,
-  TrendingUp,
-  Receipt,
-  Sparkles,
-} from 'lucide-react';
-import { IconGift } from '@douyinfe/semi-icons';
+import { CreditCard, Coins, Receipt, Sparkles } from 'lucide-react';
 import { useMinimumLoadingTime } from '../../hooks/common/useMinimumLoadingTime';
 import { getCurrencyConfig } from '../../helpers/render';
 import SubscriptionPlansCard from './SubscriptionPlansCard';
@@ -122,18 +112,9 @@ const RechargeCard = ({
     <Space vertical style={{ width: '100%' }}>
       {/* 统计数据 */}
       <Card
-        className='!rounded-xl w-full'
+        className='!rounded-xl w-full cheapai-stats-card'
         cover={
-          <div
-            className='relative h-30'
-            style={{
-              '--palette-primary-darkerChannel': '37 99 235',
-              backgroundImage: `linear-gradient(0deg, rgba(var(--palette-primary-darkerChannel) / 80%), rgba(var(--palette-primary-darkerChannel) / 80%)), url('/cover-4.webp')`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
+          <div className='cheapai-stats-cover'>
             <div className='relative z-10 h-full flex flex-col justify-between p-4'>
               <div className='flex justify-between items-center'>
                 <Text strong style={{ color: 'white', fontSize: '16px' }}>
@@ -152,11 +133,7 @@ const RechargeCard = ({
                     {renderQuota(userState?.user?.quota)}
                   </div>
                   <div className='flex items-center justify-center text-sm'>
-                    <Wallet
-                      size={14}
-                      className='mr-1'
-                      style={{ color: 'rgba(255,255,255,0.8)' }}
-                    />
+                    <span className='cheapai-text-logo mr-1'>BAL</span>
                     <Text
                       style={{
                         color: 'rgba(255,255,255,0.8)',
@@ -177,11 +154,7 @@ const RechargeCard = ({
                     {renderQuota(userState?.user?.used_quota)}
                   </div>
                   <div className='flex items-center justify-center text-sm'>
-                    <TrendingUp
-                      size={14}
-                      className='mr-1'
-                      style={{ color: 'rgba(255,255,255,0.8)' }}
-                    />
+                    <span className='cheapai-text-logo mr-1'>USE</span>
                     <Text
                       style={{
                         color: 'rgba(255,255,255,0.8)',
@@ -202,11 +175,7 @@ const RechargeCard = ({
                     {userState?.user?.request_count || 0}
                   </div>
                   <div className='flex items-center justify-center text-sm'>
-                    <BarChart2
-                      size={14}
-                      className='mr-1'
-                      style={{ color: 'rgba(255,255,255,0.8)' }}
-                    />
+                    <span className='cheapai-text-logo mr-1'>REQ</span>
                     <Text
                       style={{
                         color: 'rgba(255,255,255,0.8)',
@@ -584,7 +553,7 @@ const RechargeCard = ({
             placeholder={t('请输入兑换码')}
             value={redemptionCode}
             onChange={(value) => setRedemptionCode(value)}
-            prefix={<IconGift />}
+            prefix={<span className='cheapai-input-text-logo'>CODE</span>}
             suffix={
               <div className='flex items-center gap-2'>
                 <Button
@@ -621,13 +590,11 @@ const RechargeCard = ({
   );
 
   return (
-    <Card className='!rounded-2xl shadow-sm border-0'>
+    <Card className='!rounded-2xl shadow-sm border-0 cheapai-panel-card'>
       {/* 卡片头部 */}
       <div className='flex items-center justify-between mb-4'>
         <div className='flex items-center'>
-          <Avatar size='small' color='blue' className='mr-3 shadow-md'>
-            <CreditCard size={16} />
-          </Avatar>
+          <span className='cheapai-section-logo mr-3'>充值</span>
           <div>
             <Typography.Text className='text-lg font-medium'>
               {t('账户充值')}
@@ -676,7 +643,7 @@ const RechargeCard = ({
           <TabPane
             tab={
               <div className='flex items-center gap-2'>
-                <Wallet size={16} />
+                <span className='cheapai-tab-text-logo'>WAL</span>
                 {t('额度充值')}
               </div>
             }

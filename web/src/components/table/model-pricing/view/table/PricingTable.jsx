@@ -89,7 +89,7 @@ const PricingTable = ({
           columns={processedColumns}
           dataSource={filteredModels}
           loading={loading}
-          scroll={compactMode ? undefined : { x: 'max-content' }}
+          scroll={compactMode ? undefined : { x: '100%' }}
           empty={
             <Empty
               image={

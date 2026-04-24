@@ -20,11 +20,7 @@ For commercial licensing, please contact support@quantumnous.com
 import React, { useEffect, useMemo, useState } from 'react';
 import { Skeleton } from '@douyinfe/semi-ui';
 import { Link } from 'react-router-dom';
-import {
-  API,
-  calculateModelPrice,
-  getLobeHubIcon,
-} from '../../helpers';
+import { API, calculateModelPrice, getLobeHubIcon } from '../../helpers';
 import NoticeModal from '../../components/layout/NoticeModal';
 
 const preferredModels = [
@@ -73,12 +69,16 @@ const pickFeaturedModels = (models) => {
   preferredModels.forEach((keyword) => {
     const model = models.find(
       (item) =>
-        !picked.includes(item) && normalizeName(item.model_name).includes(keyword),
+        !picked.includes(item) &&
+        normalizeName(item.model_name).includes(keyword),
     );
     if (model) picked.push(model);
   });
 
-  return [...picked, ...models.filter((model) => !picked.includes(model))].slice(0, 3);
+  return [
+    ...picked,
+    ...models.filter((model) => !picked.includes(model)),
+  ].slice(0, 3);
 };
 
 const formatPercent = (value) => {
@@ -93,7 +93,7 @@ const Home = () => {
   const [featuredModels, setFeaturedModels] = useState([]);
   const [loadingModels, setLoadingModels] = useState(true);
 
-  const displayPrice = (price) => `$${Number(price || 0).toFixed(3)}`;
+  const displayPrice = (price) => `￥${Number(price || 0).toFixed(3)}`;
 
   useEffect(() => {
     const checkNoticeAndShow = async () => {
@@ -134,7 +134,9 @@ const Home = () => {
               quotaDisplayType: 'USD',
               precision: 3,
             });
-            const discount = formatPercent((price.usedGroupRatio || 1) * 100 - 100);
+            const discount = formatPercent(
+              (price.usedGroupRatio || 1) * 100 - 100,
+            );
             return { ...model, price, discount };
           });
           setFeaturedModels(models);
@@ -155,28 +157,29 @@ const Home = () => {
         model_name: 'claude-opus-4-6',
         vendor_name: 'Anthropic',
         vendor_icon: 'anthropic',
-        price: { inputPrice: '$0.950', completionPrice: '$4.750' },
+        price: { inputPrice: '￥0.950', completionPrice: '￥4.750' },
         discount: '-81.0%',
       },
       {
         model_name: 'GPT-5.3 Codex',
         vendor_name: 'OpenAI',
         vendor_icon: 'openai',
-        price: { inputPrice: '$0.179', completionPrice: '$1.435' },
+        price: { inputPrice: '￥0.179', completionPrice: '￥1.435' },
         discount: '-90.0%',
       },
       {
         model_name: 'Gemini 3 Pro',
         vendor_name: 'Google',
         vendor_icon: 'gemini',
-        price: { inputPrice: '$0.460', completionPrice: '$2.760' },
+        price: { inputPrice: '￥0.460', completionPrice: '￥2.760' },
         discount: '-63.2%',
       },
     ],
     [],
   );
 
-  const modelsToShow = featuredModels.length > 0 ? featuredModels : fallbackModels;
+  const modelsToShow =
+    featuredModels.length > 0 ? featuredModels : fallbackModels;
 
   const renderLink = (link) => {
     if (link.to) return <Link to={link.to}>{link.label}</Link>;
@@ -189,7 +192,10 @@ const Home = () => {
 
   return (
     <div className='cheapai-home min-h-screen'>
-      <NoticeModal visible={noticeVisible} onClose={() => setNoticeVisible(false)} />
+      <NoticeModal
+        visible={noticeVisible}
+        onClose={() => setNoticeVisible(false)}
+      />
 
       <section className='cheapai-hero'>
         <div className='cheapai-hero-content'>
@@ -208,19 +214,25 @@ const Home = () => {
           {loadingModels && featuredModels.length === 0
             ? Array.from({ length: 3 }).map((_, index) => (
                 <div className='cheapai-model-card' key={index}>
-                  <Skeleton active placeholder={<Skeleton.Paragraph rows={4} />} />
+                  <Skeleton
+                    active
+                    placeholder={<Skeleton.Paragraph rows={4} />}
+                  />
                 </div>
               ))
             : modelsToShow.map((model) => {
                 const vendor = getVendorLabel(model);
-                const inputPrice = model.price?.inputPrice || model.price?.price || '-';
+                const inputPrice =
+                  model.price?.inputPrice || model.price?.price || '-';
                 const outputPrice =
                   model.price?.completionPrice || model.price?.price || '-';
                 return (
                   <div className='cheapai-model-card' key={model.model_name}>
                     <div className='cheapai-model-header'>
                       <div className='cheapai-model-logo'>
-                        {model.vendor_icon ? getLobeHubIcon(model.vendor_icon, 28) : vendor.slice(0, 1)}
+                        {model.vendor_icon
+                          ? getLobeHubIcon(model.vendor_icon, 28)
+                          : vendor.slice(0, 1)}
                       </div>
                       <div>
                         <h3>{model.model_name}</h3>

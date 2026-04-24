@@ -3283,6 +3283,16 @@ textarea::placeholder,
   background: rgba(2, 6, 23, 0.64) !important;
 }
 
+.cyber-pricing-page .semi-table,
+.cyber-pricing-page .semi-table-container,
+.cyber-pricing-page .semi-table table {
+  width: 100% !important;
+}
+
+.cyber-pricing-page .semi-table table {
+  table-layout: fixed;
+}
+
 .cyber-pricing-page .semi-table-thead > .semi-table-row > .semi-table-row-head {
   background: rgba(15, 23, 42, 0.96) !important;
   color: rgba(226, 232, 240, 0.72) !important;
@@ -3303,17 +3313,40 @@ textarea::placeholder,
 }
 
 .cheapai-model-name-cell {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+}
+
+.cheapai-model-name-copy {
+  min-width: 0;
+  border: 0;
+  padding: 0;
   color: #f8fafc;
+  background: transparent;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cheapai-model-name-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cheapai-model-name-copy:hover {
+  color: #7dd3fc;
 }
 
 .cheapai-model-name-cell .semi-button {
-  opacity: 0.72;
+  flex: 0 0 auto;
+  opacity: 0.68;
+  color: rgba(191, 219, 254, 0.9) !important;
 }
 
 .cheapai-model-name-cell .semi-button:hover {
@@ -3345,6 +3378,132 @@ textarea::placeholder,
 .cheapai-price-muted {
   color: rgba(148, 163, 184, 0.84);
   font-size: 12px;
+}
+
+/* CheapAI wallet and profile cards */
+.cheapai-panel-card {
+  border: 1px solid rgba(96, 165, 250, 0.16) !important;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.12), transparent 34%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.88)) !important;
+  box-shadow: 0 18px 48px rgba(2, 6, 23, 0.26) !important;
+}
+
+.cheapai-section-logo,
+.cheapai-profile-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(125, 211, 252, 0.42);
+  color: #dbeafe;
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.28),
+    rgba(37, 99, 235, 0.18)
+  );
+  box-shadow:
+    inset 0 0 18px rgba(125, 211, 252, 0.08),
+    0 12px 30px rgba(14, 165, 233, 0.14);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cheapai-section-logo {
+  min-width: 46px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.cheapai-profile-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  font-size: 18px;
+}
+
+.cheapai-stats-card {
+  overflow: hidden;
+  border: 1px solid rgba(96, 165, 250, 0.18) !important;
+  background: rgba(2, 6, 23, 0.58) !important;
+}
+
+.cheapai-stats-cover,
+.cheapai-profile-cover {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 8% 10%,
+      rgba(59, 130, 246, 0.44),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 92% 10%,
+      rgba(14, 165, 233, 0.28),
+      transparent 32%
+    ),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.94));
+}
+
+.cheapai-stats-cover {
+  height: 120px;
+}
+
+.cheapai-stats-cover-green {
+  background:
+    radial-gradient(circle at 8% 10%, rgba(34, 197, 94, 0.32), transparent 34%),
+    radial-gradient(
+      circle at 92% 10%,
+      rgba(14, 165, 233, 0.22),
+      transparent 32%
+    ),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.94));
+}
+
+.cheapai-profile-cover {
+  height: 128px;
+}
+
+.cheapai-stats-cover::before,
+.cheapai-profile-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.74), transparent);
+}
+
+.cheapai-text-logo,
+.cheapai-tab-text-logo,
+.cheapai-input-text-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(125, 211, 252, 0.36);
+  color: #bae6fd;
+  background: rgba(14, 165, 233, 0.14);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.cheapai-text-logo {
+  min-width: 30px;
+  height: 18px;
+  padding: 0 6px;
+}
+
+.cheapai-tab-text-logo,
+.cheapai-input-text-logo {
+  min-width: 36px;
+  height: 20px;
+  padding: 0 8px;
 }
 
 @media (max-width: 768px) {

@@ -18,21 +18,8 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
-import {
-  Avatar,
-  Card,
-  Tag,
-  Divider,
-  Typography,
-  Badge,
-} from '@douyinfe/semi-ui';
-import {
-  isRoot,
-  isAdmin,
-  renderQuota,
-  stringToColor,
-} from '../../../../helpers';
-import { Coins, BarChart2, Users } from 'lucide-react';
+import { Card, Tag, Divider, Typography, Badge } from '@douyinfe/semi-ui';
+import { isRoot, isAdmin, renderQuota } from '../../../../helpers';
 
 const UserInfoHeader = ({ t, userState }) => {
   const getUsername = () => {
@@ -53,25 +40,14 @@ const UserInfoHeader = ({ t, userState }) => {
 
   return (
     <Card
-      className='!rounded-2xl overflow-hidden'
+      className='!rounded-2xl overflow-hidden cheapai-panel-card'
       cover={
-        <div
-          className='relative h-32'
-          style={{
-            '--palette-primary-darkerChannel': '0 75 80',
-            backgroundImage: `linear-gradient(0deg, rgba(var(--palette-primary-darkerChannel) / 80%), rgba(var(--palette-primary-darkerChannel) / 80%)), url('/cover-4.webp')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
+        <div className='cheapai-profile-cover'>
           {/* 用户信息内容 */}
           <div className='relative z-10 h-full flex flex-col justify-end p-6'>
             <div className='flex items-center'>
               <div className='flex items-stretch gap-3 sm:gap-4 flex-1 min-w-0'>
-                <Avatar size='large' color={stringToColor(getUsername())}>
-                  {getAvatarText()}
-                </Avatar>
+                <span className='cheapai-profile-logo'>{getAvatarText()}</span>
                 <div className='flex-1 min-w-0 flex flex-col justify-between'>
                   <div
                     className='text-3xl font-bold truncate'
@@ -134,7 +110,7 @@ const UserInfoHeader = ({ t, userState }) => {
           >
             <div className='flex items-center gap-4'>
               <div className='flex items-center gap-2'>
-                <Coins size={16} />
+                <span className='cheapai-text-logo'>USE</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('历史消耗')}
                 </Typography.Text>
@@ -144,7 +120,7 @@ const UserInfoHeader = ({ t, userState }) => {
               </div>
               <Divider layout='vertical' />
               <div className='flex items-center gap-2'>
-                <BarChart2 size={16} />
+                <span className='cheapai-text-logo'>REQ</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('请求次数')}
                 </Typography.Text>
@@ -154,7 +130,7 @@ const UserInfoHeader = ({ t, userState }) => {
               </div>
               <Divider layout='vertical' />
               <div className='flex items-center gap-2'>
-                <Users size={16} />
+                <span className='cheapai-text-logo'>GRP</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('用户分组')}
                 </Typography.Text>
@@ -177,7 +153,7 @@ const UserInfoHeader = ({ t, userState }) => {
           <div className='space-y-3'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <Coins size={16} />
+                <span className='cheapai-text-logo'>USE</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('历史消耗')}
                 </Typography.Text>
@@ -189,7 +165,7 @@ const UserInfoHeader = ({ t, userState }) => {
             <Divider margin='8px' />
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <BarChart2 size={16} />
+                <span className='cheapai-text-logo'>REQ</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('请求次数')}
                 </Typography.Text>
@@ -201,7 +177,7 @@ const UserInfoHeader = ({ t, userState }) => {
             <Divider margin='8px' />
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
-                <Users size={16} />
+                <span className='cheapai-text-logo'>GRP</span>
                 <Typography.Text size='small' type='tertiary'>
                   {t('用户分组')}
                 </Typography.Text>

@@ -125,10 +125,19 @@ export const getPricingTableColumns = ({
     {
       title: t('模型名称'),
       dataIndex: 'model_name',
-      width: 360,
+      width: '46%',
       render: (text) => (
         <div className='cheapai-model-name-cell'>
-          <span>{text}</span>
+          <button
+            type='button'
+            className='cheapai-model-name-copy'
+            onClick={(event) => {
+              event.stopPropagation();
+              copyText(text);
+            }}
+          >
+            <span>{text}</span>
+          </button>
           <Button
             theme='borderless'
             type='tertiary'
@@ -138,9 +147,7 @@ export const getPricingTableColumns = ({
               event.stopPropagation();
               copyText(text);
             }}
-          >
-            Copy
-          </Button>
+          />
         </div>
       ),
       onFilter: (value, record) =>
@@ -149,7 +156,7 @@ export const getPricingTableColumns = ({
     {
       title: t('类型'),
       dataIndex: 'vendor_name',
-      width: 180,
+      width: '18%',
       render: (_, record) => (
         <Tag color='green' shape='circle' className='cheapai-model-type-tag'>
           {getModelType(record)}
@@ -159,7 +166,7 @@ export const getPricingTableColumns = ({
     {
       title: t('计费类型'),
       dataIndex: 'quota_type',
-      width: 160,
+      width: '16%',
       render: (value) => (
         <Tag color='grey' shape='circle'>
           {renderBillingType(value, t)}
@@ -170,7 +177,7 @@ export const getPricingTableColumns = ({
     {
       title: t('价格（输入 / 输出 tokens）'),
       dataIndex: 'price',
-      width: 260,
+      width: '20%',
       render: (_, record) => renderPrice(record, getPriceData(record), t),
     },
   ];
