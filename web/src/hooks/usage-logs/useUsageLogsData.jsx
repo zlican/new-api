@@ -112,17 +112,17 @@ export const useLogsData = () => {
   const getDefaultColumnVisibility = () => {
     return {
       [COLUMN_KEYS.TIME]: true,
-      [COLUMN_KEYS.CHANNEL]: isAdminUser,
+      [COLUMN_KEYS.CHANNEL]: false,
       [COLUMN_KEYS.USERNAME]: isAdminUser,
       [COLUMN_KEYS.TOKEN]: true,
-      [COLUMN_KEYS.GROUP]: true,
+      [COLUMN_KEYS.GROUP]: false,
       [COLUMN_KEYS.TYPE]: true,
       [COLUMN_KEYS.MODEL]: true,
       [COLUMN_KEYS.USE_TIME]: true,
       [COLUMN_KEYS.PROMPT]: true,
       [COLUMN_KEYS.COMPLETION]: true,
       [COLUMN_KEYS.COST]: true,
-      [COLUMN_KEYS.RETRY]: isAdminUser,
+      [COLUMN_KEYS.RETRY]: false,
       [COLUMN_KEYS.IP]: true,
       [COLUMN_KEYS.DETAILS]: true,
     };
@@ -145,6 +145,10 @@ export const useLogsData = () => {
         merged[COLUMN_KEYS.USERNAME] = false;
         merged[COLUMN_KEYS.RETRY] = false;
       }
+
+      merged[COLUMN_KEYS.CHANNEL] = false;
+      merged[COLUMN_KEYS.GROUP] = false;
+      merged[COLUMN_KEYS.RETRY] = false;
 
       return merged;
     } catch (e) {
@@ -621,24 +625,6 @@ export const useLogsData = () => {
           value: t(
             'token 会按倍率换算成“额度/次数”，请求结束后再做差额结算（补扣/返还）。',
           ),
-        });
-      }
-      if (isAdminUser && logs[i].type !== 6 && logs[i].type !== 1) {
-        expandDataLocal.push({
-          key: t('请求转换'),
-          value: requestConversionDisplayValue(other?.request_conversion),
-        });
-      }
-      if (isAdminUser && logs[i].type !== 6 && logs[i].type !== 1) {
-        let localCountMode = '';
-        if (other?.admin_info?.local_count_tokens) {
-          localCountMode = t('本地计费');
-        } else {
-          localCountMode = t('上游返回');
-        }
-        expandDataLocal.push({
-          key: t('计费模式'),
-          value: localCountMode,
         });
       }
       if (isAdminUser && logs[i].type === 1) {

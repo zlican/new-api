@@ -113,7 +113,7 @@ const PricingVendors = ({
 
   return (
     <SelectableButtonGroup
-      title={t('模型')}
+      title={null}
       items={items}
       activeValue={filterVendor}
       onChange={setFilterVendor}

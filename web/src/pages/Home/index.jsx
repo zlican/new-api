@@ -17,120 +17,105 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  Button,
-  Typography,
-  Input,
-  ScrollList,
-  ScrollItem,
-} from '@douyinfe/semi-ui';
-import { API, showError, copy, showSuccess } from '../../helpers';
-import { useIsMobile } from '../../hooks/common/useIsMobile';
-import { API_ENDPOINTS } from '../../constants/common.constant';
-import { StatusContext } from '../../context/Status';
-import { useActualTheme } from '../../context/Theme';
-import { marked } from 'marked';
-import { useTranslation } from 'react-i18next';
-import {
-  IconGithubLogo,
-  IconPlay,
-  IconFile,
-  IconCopy,
-} from '@douyinfe/semi-icons';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Button, Input, Skeleton } from '@douyinfe/semi-ui';
+import { IconCopy, IconExternalOpen, IconPlay } from '@douyinfe/semi-icons';
 import { Link } from 'react-router-dom';
-import NoticeModal from '../../components/layout/NoticeModal';
 import {
-  Moonshot,
-  OpenAI,
-  XAI,
-  Zhipu,
-  Volcengine,
-  Cohere,
-  Claude,
-  Gemini,
-  Suno,
-  Minimax,
-  Wenxin,
-  Spark,
-  Qingyan,
-  DeepSeek,
-  Qwen,
-  Midjourney,
-  Grok,
-  AzureAI,
-  Hunyuan,
-  Xinference,
-} from '@lobehub/icons';
+  API,
+  calculateModelPrice,
+  copy,
+  getLobeHubIcon,
+  showSuccess,
+} from '../../helpers';
+import { StatusContext } from '../../context/Status';
+import NoticeModal from '../../components/layout/NoticeModal';
 
-const { Text } = Typography;
+const preferredModels = [
+  'claude-opus-4',
+  'gpt-5',
+  'codex',
+  'gemini-3-pro',
+  'gemini-pro',
+  'deepseek',
+];
+
+const footerGroups = [
+  {
+    title: '产品',
+    links: [
+      { label: '定价', to: '/pricing' },
+      { label: '文档', href: 'https://aiberm.com' },
+      { label: '控制台', to: '/console' },
+    ],
+  },
+  {
+    title: '公司',
+    links: [
+      { label: '关于', to: '/about' },
+      { label: '合作伙伴', href: 'mailto:support@aiberm.com' },
+      { label: '状态', href: 'https://aiberm.com' },
+    ],
+  },
+  {
+    title: '法律',
+    links: [
+      { label: '隐私', to: '/privacy-policy' },
+      { label: '条款', to: '/user-agreement' },
+      { label: '退款政策', href: 'mailto:support@aiberm.com' },
+      { label: '合规使用', to: '/user-agreement' },
+    ],
+  },
+];
+
+const normalizeName = (name = '') => name.toLowerCase();
+
+const pickFeaturedModels = (models) => {
+  if (!Array.isArray(models) || models.length === 0) return [];
+
+  const picked = [];
+  preferredModels.forEach((keyword) => {
+    const model = models.find(
+      (item) =>
+        !picked.includes(item) && normalizeName(item.model_name).includes(keyword),
+    );
+    if (model) picked.push(model);
+  });
+
+  return [...picked, ...models.filter((model) => !picked.includes(model))].slice(0, 3);
+};
+
+const formatPercent = (value) => {
+  if (!Number.isFinite(value) || value >= 0) return null;
+  return `${value.toFixed(1)}%`;
+};
+
+const getVendorLabel = (model) => model.vendor_name || model.vendor || 'AI';
 
 const Home = () => {
-  const { t, i18n } = useTranslation();
   const [statusState] = useContext(StatusContext);
-  const actualTheme = useActualTheme();
-  const [homePageContentLoaded, setHomePageContentLoaded] = useState(false);
-  const [homePageContent, setHomePageContent] = useState('');
   const [noticeVisible, setNoticeVisible] = useState(false);
-  const isMobile = useIsMobile();
-  const isDemoSiteMode = statusState?.status?.demo_site_enabled || false;
-  const docsLink = statusState?.status?.docs_link || '';
-  const serverAddress =
-    statusState?.status?.server_address || `${window.location.origin}`;
-  const endpointItems = API_ENDPOINTS.map((e) => ({ value: e }));
-  const [endpointIndex, setEndpointIndex] = useState(0);
-  const isChinese = i18n.language.startsWith('zh');
+  const [featuredModels, setFeaturedModels] = useState([]);
+  const [loadingModels, setLoadingModels] = useState(true);
+  const serverAddress = statusState?.status?.server_address || 'https://aiberm.com';
+  const docsLink = statusState?.status?.docs_link || 'https://aiberm.com';
 
-  const displayHomePageContent = async () => {
-    setHomePageContent(localStorage.getItem('home_page_content') || '');
-    const res = await API.get('/api/home_page_content');
-    const { success, message, data } = res.data;
-    if (success) {
-      let content = data;
-      if (!data.startsWith('https://')) {
-        content = marked.parse(data);
-      }
-      setHomePageContent(content);
-      localStorage.setItem('home_page_content', content);
-
-      // 如果内容是 URL，则发送主题模式
-      if (data.startsWith('https://')) {
-        const iframe = document.querySelector('iframe');
-        if (iframe) {
-          iframe.onload = () => {
-            iframe.contentWindow.postMessage({ themeMode: actualTheme }, '*');
-            iframe.contentWindow.postMessage({ lang: i18n.language }, '*');
-          };
-        }
-      }
-    } else {
-      showError(message);
-      setHomePageContent('加载首页内容失败...');
-    }
-    setHomePageContentLoaded(true);
-  };
-
-  const handleCopyBaseURL = async () => {
-    const ok = await copy(serverAddress);
-    if (ok) {
-      showSuccess(t('已复制到剪切板'));
-    }
-  };
+  const displayPrice = (price) => `$${Number(price || 0).toFixed(3)}`;
 
   useEffect(() => {
     const checkNoticeAndShow = async () => {
       const lastCloseDate = localStorage.getItem('notice_close_date');
       const today = new Date().toDateString();
-      if (lastCloseDate !== today) {
-        try {
-          const res = await API.get('/api/notice');
-          const { success, data } = res.data;
-          if (success && data && data.trim() !== '') {
-            setNoticeVisible(true);
-          }
-        } catch (error) {
-          console.error('获取公告失败:', error);
+      if (lastCloseDate === today) return;
+
+      try {
+        const res = await API.get('/api/notice');
+        const { success, data } = res.data;
+        if (success && data && data.trim() !== '') {
+          setNoticeVisible(true);
         }
+      } catch (error) {
+        console.error('获取公告失败:', error);
       }
     };
 
@@ -138,217 +123,180 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    displayHomePageContent().then();
+    const loadFeaturedModels = async () => {
+      setLoadingModels(true);
+      try {
+        const res = await API.get('/api/pricing');
+        const { success, data, group_ratio } = res.data;
+        if (success && Array.isArray(data)) {
+          const groupRatio = group_ratio || {};
+          const models = pickFeaturedModels(data).map((model) => {
+            const price = calculateModelPrice({
+              record: model,
+              selectedGroup: 'all',
+              groupRatio,
+              tokenUnit: 'M',
+              displayPrice,
+              currency: 'USD',
+              quotaDisplayType: 'USD',
+              precision: 3,
+            });
+            const discount = formatPercent((price.usedGroupRatio || 1) * 100 - 100);
+            return { ...model, price, discount };
+          });
+          setFeaturedModels(models);
+        }
+      } catch (error) {
+        console.error('加载精选模型失败:', error);
+      } finally {
+        setLoadingModels(false);
+      }
+    };
+
+    loadFeaturedModels();
   }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setEndpointIndex((prev) => (prev + 1) % endpointItems.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [endpointItems.length]);
+  const fallbackModels = useMemo(
+    () => [
+      {
+        model_name: 'claude-opus-4-6',
+        vendor_name: 'Anthropic',
+        vendor_icon: 'anthropic',
+        price: { inputPrice: '$0.950', completionPrice: '$4.750' },
+        discount: '-81.0%',
+      },
+      {
+        model_name: 'GPT-5.3 Codex',
+        vendor_name: 'OpenAI',
+        vendor_icon: 'openai',
+        price: { inputPrice: '$0.179', completionPrice: '$1.435' },
+        discount: '-90.0%',
+      },
+      {
+        model_name: 'Gemini 3 Pro',
+        vendor_name: 'Google',
+        vendor_icon: 'gemini',
+        price: { inputPrice: '$0.460', completionPrice: '$2.760' },
+        discount: '-63.2%',
+      },
+    ],
+    [],
+  );
+
+  const modelsToShow = featuredModels.length > 0 ? featuredModels : fallbackModels;
+
+  const handleCopyBaseURL = async () => {
+    const ok = await copy(serverAddress);
+    if (ok) showSuccess('已复制 API Base URL');
+  };
+
+  const renderLink = (link) => {
+    if (link.to) return <Link to={link.to}>{link.label}</Link>;
+    return (
+      <a href={link.href} target='_blank' rel='noreferrer'>
+        {link.label}
+      </a>
+    );
+  };
 
   return (
-    <div className='cyber-home-page w-full overflow-x-hidden'>
-      <NoticeModal
-        visible={noticeVisible}
-        onClose={() => setNoticeVisible(false)}
-        isMobile={isMobile}
-      />
-      {homePageContentLoaded && homePageContent === '' ? (
-        <div className='cyber-home-default w-full overflow-x-hidden'>
-          {/* Banner 部分 */}
-          <div className='cyber-home-hero w-full border-b border-semi-color-border min-h-[500px] md:min-h-[600px] lg:min-h-[700px] relative overflow-x-hidden'>
-            {/* 背景模糊晕染球 */}
-            <div className='blur-ball blur-ball-indigo' />
-            <div className='blur-ball blur-ball-teal' />
-            <div className='cyber-home-hero-inner flex items-center justify-center h-full px-4 py-20 md:py-24 lg:py-32 mt-10'>
-              {/* 居中内容区 */}
-              <div className='cyber-home-terminal flex flex-col items-center justify-center text-center max-w-4xl mx-auto'>
-                <div className='flex flex-col items-center justify-center mb-6 md:mb-8'>
-                  <h1
-                    className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-semi-color-text-0 leading-tight ${isChinese ? 'tracking-wide md:tracking-wider' : ''}`}
-                  >
-                    <>
-                      {t('统一的')}
-                      <br />
-                      <span className='shine-text'>{t('大模型接口网关')}</span>
-                    </>
-                  </h1>
-                  <p className='text-base md:text-lg lg:text-xl text-semi-color-text-1 mt-4 md:mt-6 max-w-xl'>
-                    {t('更好的价格，更好的稳定性，只需要将模型基址替换为：')}
-                  </p>
-                  {/* BASE URL 与端点选择 */}
-                  <div className='flex flex-col md:flex-row items-center justify-center gap-4 w-full mt-4 md:mt-6 max-w-md'>
-                    <Input
-                      readonly
-                      value={serverAddress}
-                      className='flex-1 !rounded-full'
-                      size={isMobile ? 'default' : 'large'}
-                      suffix={
-                        <div className='flex items-center gap-2'>
-                          <ScrollList
-                            bodyHeight={32}
-                            style={{ border: 'unset', boxShadow: 'unset' }}
-                          >
-                            <ScrollItem
-                              mode='wheel'
-                              cycled={true}
-                              list={endpointItems}
-                              selectedIndex={endpointIndex}
-                              onSelect={({ index }) => setEndpointIndex(index)}
-                            />
-                          </ScrollList>
-                          <Button
-                            type='primary'
-                            onClick={handleCopyBaseURL}
-                            icon={<IconCopy />}
-                            className='!rounded-full'
-                          />
-                        </div>
-                      }
-                    />
-                  </div>
-                </div>
+    <div className='cheapai-home min-h-screen'>
+      <NoticeModal visible={noticeVisible} onClose={() => setNoticeVisible(false)} />
 
-                {/* 操作按钮 */}
-                <div className='cyber-home-actions flex flex-row gap-4 justify-center items-center'>
-                  <Link to='/console'>
-                    <Button
-                      theme='solid'
-                      type='primary'
-                      size={isMobile ? 'default' : 'large'}
-                      className='!rounded-3xl px-8 py-2'
-                      icon={<IconPlay />}
-                    >
-                      {t('获取密钥')}
-                    </Button>
-                  </Link>
-                  {isDemoSiteMode && statusState?.status?.version ? (
-                    <Button
-                      size={isMobile ? 'default' : 'large'}
-                      className='flex items-center !rounded-3xl px-6 py-2'
-                      icon={<IconGithubLogo />}
-                      onClick={() =>
-                        window.open(
-                          'https://github.com/QuantumNous/new-api',
-                          '_blank',
-                        )
-                      }
-                    >
-                      {statusState.status.version}
-                    </Button>
-                  ) : (
-                    docsLink && (
-                      <Button
-                        size={isMobile ? 'default' : 'large'}
-                        className='flex items-center !rounded-3xl px-6 py-2'
-                        icon={<IconFile />}
-                        onClick={() => window.open(docsLink, '_blank')}
-                      >
-                        {t('文档')}
-                      </Button>
-                    )
-                  )}
-                </div>
-
-                {/* 框架兼容性图标 */}
-                <div className='cyber-provider-matrix mt-12 md:mt-16 lg:mt-20 w-full'>
-                  <div className='flex items-center mb-6 md:mb-8 justify-center'>
-                    <Text
-                      type='tertiary'
-                      className='text-lg md:text-xl lg:text-2xl font-light'
-                    >
-                      {t('支持众多的大模型供应商')}
-                    </Text>
-                  </div>
-                  <div className='flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto px-4'>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Moonshot size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <OpenAI size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <XAI size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Zhipu.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Volcengine.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Cohere.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Claude.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Gemini.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Suno size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Minimax.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Wenxin.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Spark.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Qingyan.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <DeepSeek.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Qwen.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Midjourney size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Grok size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <AzureAI.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Hunyuan.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Xinference.Color size={40} />
-                    </div>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 flex items-center justify-center'>
-                      <Typography.Text className='!text-lg sm:!text-xl md:!text-2xl lg:!text-3xl font-bold'>
-                        30+
-                      </Typography.Text>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      <section className='cheapai-hero'>
+        <div className='cheapai-hero-content'>
+          <div className='cheapai-badge'>CheapAI API Platform</div>
+          <h1>让所有人使用上更 Cheap 的 AI</h1>
+          <p>为开发者提供有折扣的 AI API，统一接入，透明定价。</p>
+          <div className='cheapai-actions'>
+            <Link to='/console'>
+              <Button theme='solid' type='primary' size='large' icon={<IconPlay />}>
+                开始使用
+              </Button>
+            </Link>
+            <Button
+              theme='outline'
+              type='tertiary'
+              size='large'
+              icon={<IconExternalOpen />}
+              onClick={() => window.open(docsLink, '_blank')}
+            >
+              查看文档
+            </Button>
+          </div>
+          <div className='cheapai-base-url'>
+            <div>
+              <span>API Base URL</span>
+              <Input readonly value={serverAddress} />
             </div>
+            <Button icon={<IconCopy />} onClick={handleCopyBaseURL} />
           </div>
         </div>
-      ) : (
-        <div className='cyber-home-custom overflow-x-hidden w-full'>
-          {homePageContent.startsWith('https://') ? (
-            <iframe
-              src={homePageContent}
-              className='w-full h-screen border-none'
-            />
-          ) : (
-            <div
-              className='mt-[60px]'
-              dangerouslySetInnerHTML={{ __html: homePageContent }}
-            />
-          )}
+      </section>
+
+      <section className='cheapai-models'>
+        <div className='cheapai-section-title'>
+          <h2>精选模型</h2>
+          <Link to='/pricing'>查看更多 →</Link>
         </div>
-      )}
+        <div className='cheapai-model-grid'>
+          {loadingModels && featuredModels.length === 0
+            ? Array.from({ length: 3 }).map((_, index) => (
+                <div className='cheapai-model-card' key={index}>
+                  <Skeleton active placeholder={<Skeleton.Paragraph rows={4} />} />
+                </div>
+              ))
+            : modelsToShow.map((model) => {
+                const vendor = getVendorLabel(model);
+                const inputPrice = model.price?.inputPrice || model.price?.price || '-';
+                const outputPrice =
+                  model.price?.completionPrice || model.price?.price || '-';
+                return (
+                  <div className='cheapai-model-card' key={model.model_name}>
+                    <div className='cheapai-model-header'>
+                      <div className='cheapai-model-logo'>
+                        {model.vendor_icon ? getLobeHubIcon(model.vendor_icon, 28) : vendor.slice(0, 1)}
+                      </div>
+                      <div>
+                        <h3>{model.model_name}</h3>
+                        <p>by {vendor}</p>
+                      </div>
+                    </div>
+                    <div className='cheapai-price-row'>
+                      <span>Input</span>
+                      <strong>{inputPrice}</strong>
+                      {model.discount && <em>{model.discount}</em>}
+                    </div>
+                    <div className='cheapai-price-row'>
+                      <span>Output</span>
+                      <strong>{outputPrice}</strong>
+                      {model.discount && <em>{model.discount}</em>}
+                    </div>
+                    <div className='cheapai-token-unit'>/ 百万 tokens</div>
+                  </div>
+                );
+              })}
+        </div>
+      </section>
+
+      <footer className='cheapai-footer'>
+        <div className='cheapai-footer-brand'>
+          <h2>CheapAI</h2>
+          <p>为开发者提供统一的 AI API 平台，透明定价。</p>
+          <a href='mailto:support@aiberm.com'>support@aiberm.com</a>
+        </div>
+        <div className='cheapai-footer-links'>
+          {footerGroups.map((group) => (
+            <div key={group.title}>
+              <h3>{group.title}</h3>
+              {group.links.map((link) => (
+                <div key={link.label}>{renderLink(link)}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className='cheapai-copyright'>© 2026 CheapAI. All rights reserved.</div>
+      </footer>
     </div>
   );
 };

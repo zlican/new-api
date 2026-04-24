@@ -2498,3 +2498,407 @@ textarea::placeholder,
     font-size: 14px;
   }
 }
+
+/* CheapAI page refinements */
+.cyber-stats-console {
+  display: block !important;
+}
+
+.cyber-stats-console::before {
+  content: none !important;
+  display: none !important;
+}
+
+.cyber-stats-accordion {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+.cyber-stat-items {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.cyber-stat-item {
+  transform: none !important;
+}
+
+.cyber-pricing-page {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(30, 144, 255, 0.2), transparent 32%),
+    radial-gradient(circle at 90% 12%, rgba(56, 189, 248, 0.14), transparent 34%),
+    linear-gradient(135deg, #05070d 0%, #0b1220 46%, #101827 100%) !important;
+}
+
+.cyber-pricing-content {
+  border-color: rgba(96, 165, 250, 0.2) !important;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.92)),
+    radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.12), transparent 35%) !important;
+}
+
+.cyber-pricing-heading-card {
+  overflow: hidden;
+  border: 1px solid rgba(96, 165, 250, 0.22) !important;
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+
+.cyber-pricing-heading-card .semi-card-cover > div {
+  min-height: 116px !important;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(59, 130, 246, 0.55), transparent 30%),
+    linear-gradient(135deg, rgba(2, 6, 23, 0.96), rgba(15, 23, 42, 0.92) 48%, rgba(30, 64, 175, 0.58)) !important;
+}
+
+.pricing-model-search .semi-input-wrapper {
+  height: 44px;
+  border-radius: 999px !important;
+  border: 1px solid rgba(125, 211, 252, 0.32) !important;
+  background: rgba(2, 6, 23, 0.66) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), 0 10px 32px rgba(2, 132, 199, 0.12);
+}
+
+.pricing-model-search .semi-input,
+.pricing-model-search .semi-input-prefix {
+  color: rgba(226, 232, 240, 0.95) !important;
+}
+
+.cyber-pricing-top-filters {
+  border-color: rgba(96, 165, 250, 0.22) !important;
+  background: rgba(15, 23, 42, 0.72) !important;
+}
+
+.cyber-pricing-filterbar {
+  grid-template-columns: 180px minmax(0, 1fr) !important;
+}
+
+.cyber-pricing-filter-title {
+  min-width: 180px;
+  background: rgba(2, 6, 23, 0.78) !important;
+  border-color: rgba(96, 165, 250, 0.24) !important;
+}
+
+.cyber-pricing-filter-title > div:first-child {
+  color: #7dd3fc !important;
+  letter-spacing: 0.06em !important;
+  text-transform: none !important;
+}
+
+.cyber-pricing-filterbar > :not(.cyber-pricing-filter-title) {
+  min-height: 88px !important;
+  background: rgba(2, 6, 23, 0.45) !important;
+  border-color: rgba(96, 165, 250, 0.16) !important;
+}
+
+.cyber-pricing-filterbar .sbg-button {
+  min-width: 128px;
+  border-radius: 999px !important;
+}
+
+.cyber-pricing-model-row {
+  border-color: rgba(96, 165, 250, 0.14) !important;
+  background: rgba(15, 23, 42, 0.74) !important;
+  color: rgba(226, 232, 240, 0.94) !important;
+}
+
+.cyber-pricing-model-row h3 {
+  color: rgba(248, 250, 252, 0.98) !important;
+}
+
+.model-detail-price-table .semi-table-thead > .semi-table-row > .semi-table-row-head {
+  white-space: nowrap;
+}
+
+.model-detail-price-table .semi-table-cell {
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .cyber-stats-accordion,
+  .cyber-stat-items {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cyber-pricing-filterbar {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* CheapAI landing page */
+.cheapai-home {
+  color: #e5e7eb;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(37, 99, 235, 0.28), transparent 30%),
+    radial-gradient(circle at 86% 10%, rgba(14, 165, 233, 0.2), transparent 28%),
+    linear-gradient(180deg, #030712 0%, #0f172a 52%, #020617 100%);
+  padding-top: 64px;
+}
+
+.cheapai-hero {
+  display: flex;
+  justify-content: center;
+  padding: 96px 20px 56px;
+}
+
+.cheapai-hero-content {
+  width: min(1080px, 100%);
+  text-align: center;
+}
+
+.cheapai-badge {
+  display: inline-flex;
+  padding: 8px 14px;
+  border: 1px solid rgba(125, 211, 252, 0.28);
+  border-radius: 999px;
+  color: #7dd3fc;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: 0 12px 40px rgba(14, 165, 233, 0.12);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.cheapai-hero h1 {
+  margin: 24px auto 16px;
+  max-width: 860px;
+  color: #f8fafc;
+  font-size: clamp(42px, 7vw, 82px);
+  line-height: 1.02;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+}
+
+.cheapai-hero p {
+  margin: 0 auto;
+  max-width: 680px;
+  color: #94a3b8;
+  font-size: clamp(16px, 2vw, 22px);
+}
+
+.cheapai-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+
+.cheapai-actions .semi-button {
+  border-radius: 999px !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+.cheapai-base-url {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  width: min(560px, 100%);
+  margin: 32px auto 0;
+  padding: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.cheapai-base-url > div {
+  flex: 1;
+  text-align: left;
+}
+
+.cheapai-base-url span {
+  display: block;
+  margin: 0 0 8px 12px;
+  color: #94a3b8;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.cheapai-base-url .semi-input-wrapper {
+  border: 0 !important;
+  border-radius: 16px !important;
+  background: rgba(2, 6, 23, 0.76) !important;
+}
+
+.cheapai-base-url .semi-input {
+  color: #e2e8f0 !important;
+  font-weight: 600;
+}
+
+.cheapai-base-url .semi-button {
+  height: 48px;
+  width: 48px;
+  border-radius: 16px !important;
+}
+
+.cheapai-models {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 28px 0 72px;
+}
+
+.cheapai-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.cheapai-section-title h2 {
+  color: #f8fafc;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.cheapai-section-title a {
+  color: #7dd3fc;
+  font-weight: 700;
+}
+
+.cheapai-model-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.cheapai-model-card {
+  padding: 22px;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.88)),
+    radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.18), transparent 40%);
+  box-shadow: 0 24px 80px rgba(2, 6, 23, 0.28);
+}
+
+.cheapai-model-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.cheapai-model-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: #7dd3fc;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  font-weight: 800;
+}
+
+.cheapai-model-header h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.cheapai-model-header p {
+  margin: 3px 0 0;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.cheapai-price-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.cheapai-price-row span {
+  color: #94a3b8;
+}
+
+.cheapai-price-row strong {
+  color: #f8fafc;
+  font-size: 20px;
+}
+
+.cheapai-price-row em {
+  padding: 3px 8px;
+  border-radius: 999px;
+  color: #86efac;
+  background: rgba(22, 163, 74, 0.16);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.cheapai-token-unit {
+  margin-top: 10px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.cheapai-footer {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 44px 0 32px;
+  border-top: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.cheapai-footer {
+  display: grid;
+  grid-template-columns: 1.4fr 2fr;
+  gap: 48px;
+}
+
+.cheapai-footer-brand h2 {
+  margin: 0 0 10px;
+  color: #f8fafc;
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.cheapai-footer-brand p,
+.cheapai-footer-brand a,
+.cheapai-footer-links a,
+.cheapai-copyright {
+  color: #94a3b8;
+}
+
+.cheapai-footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.cheapai-footer-links h3 {
+  margin: 0 0 12px;
+  color: #e2e8f0;
+  font-size: 15px;
+}
+
+.cheapai-footer-links div div {
+  margin-top: 9px;
+}
+
+.cheapai-copyright {
+  grid-column: 1 / -1;
+  padding-top: 22px;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  font-size: 13px;
+}
+
+@media (max-width: 860px) {
+  .cheapai-model-grid,
+  .cheapai-footer,
+  .cheapai-footer-links {
+    grid-template-columns: 1fr;
+  }
+
+  .cheapai-hero {
+    padding-top: 64px;
+  }
+}

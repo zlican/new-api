@@ -18,38 +18,17 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
-import { Button } from '@douyinfe/semi-ui';
 import PricingVendors from '../filter/PricingVendors';
 
-import { resetPricingFilters } from '../../../../helpers/utils';
 import { usePricingFilterCounts } from '../../../../hooks/model-pricing/usePricingFilterCounts';
 
 const PricingSidebar = ({
-  showWithRecharge,
-  setShowWithRecharge,
-  currency,
-  setCurrency,
-  handleChange,
-  setActiveKey,
-  showRatio,
-  setShowRatio,
-  viewMode,
-  setViewMode,
   filterGroup,
-  setFilterGroup,
-  handleGroupClick,
   filterQuotaType,
-  setFilterQuotaType,
   filterEndpointType,
-  setFilterEndpointType,
   filterVendor,
   setFilterVendor,
   filterTag,
-  setFilterTag,
-  currentPage,
-  setCurrentPage,
-  tokenUnit,
-  setTokenUnit,
   loading,
   t,
   ...categoryProps
@@ -66,34 +45,11 @@ const PricingSidebar = ({
     searchValue: categoryProps.searchValue,
   });
 
-  const handleResetFilters = () =>
-    resetPricingFilters({
-      handleChange,
-      setShowWithRecharge,
-      setCurrency,
-      setShowRatio,
-      setViewMode,
-      setFilterGroup,
-      setFilterQuotaType,
-      setFilterEndpointType,
-      setFilterVendor,
-      setFilterTag,
-      setCurrentPage,
-      setTokenUnit,
-    });
-
   return (
     <div className='cyber-pricing-filterbar p-2'>
       <div className='cyber-pricing-filter-title flex items-center justify-between mb-6'>
-        <div className='text-lg font-semibold text-gray-800'>{t('模型')}</div>
-        <Button
-          theme='outline'
-          type='tertiary'
-          onClick={handleResetFilters}
-          className='text-gray-500 hover:text-gray-700'
-        >
-          {t('重置')}
-        </Button>
+        <div className='text-lg font-semibold text-gray-800'>{t('全部模型')}</div>
+        <div className='text-xs text-gray-500'>{t('按模型厂商快速筛选')}</div>
       </div>
 
       <PricingVendors

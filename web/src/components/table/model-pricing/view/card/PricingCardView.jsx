@@ -21,15 +21,11 @@ import React from 'react';
 import {
   Card,
   Tag,
-  Tooltip,
   Checkbox,
   Empty,
   Pagination,
-  Button,
   Avatar,
 } from '@douyinfe/semi-ui';
-import { IconHelpCircle } from '@douyinfe/semi-icons';
-import { Copy } from 'lucide-react';
 import {
   IllustrationNoResult,
   IllustrationNoResultDark,
@@ -64,9 +60,6 @@ const PricingCardView = ({
   setCurrentPage,
   selectedGroup,
   groupRatio,
-  copyText,
-  setModalImageUrl,
-  setIsModalOpenurl,
   currency,
   siteDisplayType,
   tokenUnit,
@@ -278,19 +271,6 @@ const PricingCardView = ({
                   </div>
 
                   <div className='flex items-center space-x-2 ml-3'>
-                    {/* 复制按钮 */}
-                    <Button
-                      size='small'
-                      theme='outline'
-                      type='tertiary'
-                      icon={<Copy size={12} />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        copyText(model.model_name);
-                      }}
-                    />
-
-                    {/* 选择框 */}
                     {rowSelection && (
                       <Checkbox
                         checked={isSelected}
@@ -318,44 +298,6 @@ const PricingCardView = ({
                   {/* 标签区域 */}
                   {renderTags(model)}
 
-                  {/* 倍率信息（可选） */}
-                  {showRatio && (
-                    <div className='pt-3'>
-                      <div className='flex items-center space-x-1 mb-2'>
-                        <span className='text-xs font-medium text-gray-700'>
-                          {t('倍率信息')}
-                        </span>
-                        <Tooltip
-                          content={t('倍率是为了方便换算不同价格的模型')}
-                        >
-                          <IconHelpCircle
-                            className='text-blue-500 cursor-pointer'
-                            size='small'
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setModalImageUrl('/ratio.png');
-                              setIsModalOpenurl(true);
-                            }}
-                          />
-                        </Tooltip>
-                      </div>
-                      <div className='grid grid-cols-3 gap-2 text-xs text-gray-600'>
-                        <div>
-                          {t('模型')}:{' '}
-                          {model.quota_type === 0 ? model.model_ratio : t('无')}
-                        </div>
-                        <div>
-                          {t('补全')}:{' '}
-                          {model.quota_type === 0
-                            ? parseFloat(model.completion_ratio.toFixed(3))
-                            : t('无')}
-                        </div>
-                        <div>
-                          {t('分组')}: {priceData?.usedGroupRatio ?? '-'}
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </Card>
