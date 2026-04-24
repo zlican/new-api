@@ -28,22 +28,17 @@ import { getPricingTableColumns } from './PricingTableColumns';
 const PricingTable = ({
   filteredModels,
   loading,
-  rowSelection,
   pageSize,
   setPageSize,
   selectedGroup,
   groupRatio,
   copyText,
-  setModalImageUrl,
-  setIsModalOpenurl,
   currency,
   siteDisplayType,
   tokenUnit,
   displayPrice,
   searchValue,
-  showRatio,
   compactMode = false,
-  openModelDetail,
   t,
 }) => {
   const columns = useMemo(() => {
@@ -52,26 +47,20 @@ const PricingTable = ({
       selectedGroup,
       groupRatio,
       copyText,
-      setModalImageUrl,
-      setIsModalOpenurl,
       currency,
       siteDisplayType,
       tokenUnit,
       displayPrice,
-      showRatio,
     });
   }, [
     t,
     selectedGroup,
     groupRatio,
     copyText,
-    setModalImageUrl,
-    setIsModalOpenurl,
     currency,
     siteDisplayType,
     tokenUnit,
     displayPrice,
-    showRatio,
   ]);
 
   // 更新列定义中的 searchValue
@@ -100,12 +89,7 @@ const PricingTable = ({
           columns={processedColumns}
           dataSource={filteredModels}
           loading={loading}
-          rowSelection={rowSelection}
           scroll={compactMode ? undefined : { x: 'max-content' }}
-          onRow={(record) => ({
-            onClick: () => openModelDetail && openModelDetail(record),
-            style: { cursor: 'pointer' },
-          })}
           empty={
             <Empty
               image={
@@ -114,7 +98,7 @@ const PricingTable = ({
               darkModeImage={
                 <IllustrationNoResultDark style={{ width: 150, height: 150 }} />
               }
-              description={t('搜索无结果')}
+              description={loading ? t('模型数据加载中') : t('暂无可展示模型')}
               style={{ padding: 30 }}
             />
           }
@@ -132,10 +116,8 @@ const PricingTable = ({
       filteredModels,
       loading,
       processedColumns,
-      rowSelection,
       pageSize,
       setPageSize,
-      openModelDetail,
       t,
       compactMode,
     ],

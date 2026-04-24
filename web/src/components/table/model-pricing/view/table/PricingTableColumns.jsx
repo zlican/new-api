@@ -18,103 +18,89 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
-import { Tag, Space, Tooltip } from '@douyinfe/semi-ui';
-import { IconHelpCircle } from '@douyinfe/semi-icons';
-import {
-  renderModelTag,
-  stringToColor,
-  calculateModelPrice,
-  getModelPriceItems,
-  getLobeHubIcon,
-} from '../../../../../helpers';
-import {
-  renderLimitedItems,
-  renderDescription,
-} from '../../../../common/ui/RenderUtils';
-import { useIsMobile } from '../../../../../hooks/common/useIsMobile';
+import { Button, Tag } from '@douyinfe/semi-ui';
+import { IconCopy } from '@douyinfe/semi-icons';
+import { calculateModelPrice } from '../../../../../helpers';
 
-function renderQuotaType(type, t) {
-  switch (type) {
-    case 1:
-      return (
-        <Tag color='teal' shape='circle'>
-          {t('按次计费')}
-        </Tag>
-      );
-    case 0:
-      return (
-        <Tag color='violet' shape='circle'>
-          {t('按量计费')}
-        </Tag>
-      );
-    default:
-      return t('未知');
-  }
-}
+const getModelType = (record) => {
+  const vendorName = (record.vendor_name || '').toLowerCase();
+  const modelName = (record.model_name || '').toLowerCase();
 
-// Render vendor name
-const renderVendor = (vendorName, vendorIcon, t) => {
-  if (!vendorName) return '-';
-  return (
-    <Tag
-      color='white'
-      shape='circle'
-      prefixIcon={getLobeHubIcon(vendorIcon || 'Layers', 14)}
-    >
-      {vendorName}
-    </Tag>
-  );
+  if (vendorName.includes('anthropic') || modelName.includes('claude'))
+    return 'anthropic';
+  if (vendorName.includes('google') || modelName.includes('gemini'))
+    return 'gemini';
+  if (
+    vendorName.includes('moonshot') ||
+    modelName.includes('moonshot') ||
+    modelName.includes('kimi')
+  )
+    return 'moonshot';
+  if (vendorName.includes('deepseek') || modelName.includes('deepseek'))
+    return 'deepseek';
+  if (vendorName.includes('minimax') || modelName.includes('minimax'))
+    return 'minimax';
+  if (
+    vendorName.includes('openai') ||
+    modelName.includes('gpt') ||
+    modelName.includes('openai')
+  )
+    return 'openai';
+
+  return vendorName || 'model';
 };
 
-// Render tags list using RenderUtils
-const renderTags = (text) => {
-  if (!text) return '-';
-  const tagsArr = text.split(',').filter((tag) => tag.trim());
-  return renderLimitedItems({
-    items: tagsArr,
-    renderItem: (tag, idx) => (
-      <Tag
-        key={idx}
-        color={stringToColor(tag.trim())}
-        shape='circle'
-        size='small'
-      >
-        {tag.trim()}
-      </Tag>
-    ),
-    maxDisplay: 3,
-  });
+const renderBillingType = (quotaType, t) => {
+  if (quotaType === 0) return t('按量计费');
+  if (quotaType === 1) return t('按次计费');
+  return t('按量计费');
 };
 
-function renderSupportedEndpoints(endpoints) {
-  if (!endpoints || endpoints.length === 0) {
-    return null;
+const renderPrice = (record, priceData, t) => {
+  if (priceData.isDynamicPricing) {
+    return <span className='cheapai-price-muted'>{t('动态计费')}</span>;
   }
+
+  if (priceData.isPerToken) {
+    const unit = priceData.unitLabel || 'M';
+    return (
+      <div className='cheapai-price-stack'>
+        <div>
+          <strong>{priceData.inputPrice || '-'}</strong>
+          <span>
+            / {unit} {t('输入 tokens')}
+          </span>
+        </div>
+        <div>
+          <strong>{priceData.completionPrice || '-'}</strong>
+          <span>
+            / {unit} {t('输出 tokens')}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Space wrap>
-      {endpoints.map((endpoint, idx) => (
-        <Tag key={endpoint} color={stringToColor(endpoint)} shape='circle'>
-          {endpoint}
-        </Tag>
-      ))}
-    </Space>
+    <div className='cheapai-price-stack'>
+      <div>
+        <strong>{priceData.price || '-'}</strong>
+        <span>/ {t('次')}</span>
+      </div>
+    </div>
   );
-}
+};
 
 export const getPricingTableColumns = ({
   t,
   selectedGroup,
   groupRatio,
   copyText,
-  setModalImageUrl,
-  setIsModalOpenurl,
   currency,
   siteDisplayType,
   tokenUnit,
   displayPrice,
-  showRatio,
 }) => {
-  const isMobile = useIsMobile();
   const priceDataCache = new WeakMap();
 
   const getPriceData = (record) => {
@@ -128,132 +114,64 @@ export const getPricingTableColumns = ({
         displayPrice,
         currency,
         quotaDisplayType: siteDisplayType,
+        precision: 3,
       });
       priceDataCache.set(record, cache);
     }
     return cache;
   };
 
-  const endpointColumn = {
-    title: t('可用端点类型'),
-    dataIndex: 'supported_endpoint_types',
-    render: (text, record, index) => {
-      return renderSupportedEndpoints(text);
-    },
-  };
-
-  const modelNameColumn = {
-    title: t('模型名称'),
-    dataIndex: 'model_name',
-    render: (text, record, index) => {
-      return renderModelTag(text, {
-        onClick: () => {
-          copyText(text);
-        },
-      });
-    },
-    onFilter: (value, record) =>
-      record.model_name.toLowerCase().includes(value.toLowerCase()),
-  };
-
-  const quotaColumn = {
-    title: t('计费类型'),
-    dataIndex: 'quota_type',
-    render: (text, record, index) => {
-      return renderQuotaType(parseInt(text), t);
-    },
-    sorter: (a, b) => a.quota_type - b.quota_type,
-  };
-
-  const descriptionColumn = {
-    title: t('描述'),
-    dataIndex: 'description',
-    render: (text) => renderDescription(text, 200),
-  };
-
-  const tagsColumn = {
-    title: t('标签'),
-    dataIndex: 'tags',
-    render: renderTags,
-  };
-
-  const vendorColumn = {
-    title: t('供应商'),
-    dataIndex: 'vendor_name',
-    render: (text, record) => renderVendor(text, record.vendor_icon, t),
-  };
-
-  const baseColumns = [
-    modelNameColumn,
-    vendorColumn,
-    descriptionColumn,
-    tagsColumn,
-    quotaColumn,
-  ];
-
-  const ratioColumn = {
-    title: () => (
-      <div className='flex items-center space-x-1'>
-        <span>{t('倍率')}</span>
-        <Tooltip content={t('倍率是为了方便换算不同价格的模型')}>
-          <IconHelpCircle
-            className='text-blue-500 cursor-pointer'
-            onClick={() => {
-              setModalImageUrl('/ratio.png');
-              setIsModalOpenurl(true);
+  return [
+    {
+      title: t('模型名称'),
+      dataIndex: 'model_name',
+      width: 360,
+      render: (text) => (
+        <div className='cheapai-model-name-cell'>
+          <span>{text}</span>
+          <Button
+            theme='borderless'
+            type='tertiary'
+            size='small'
+            icon={<IconCopy />}
+            onClick={(event) => {
+              event.stopPropagation();
+              copyText(text);
             }}
-          />
-        </Tooltip>
-      </div>
-    ),
-    dataIndex: 'model_ratio',
-    render: (text, record, index) => {
-      const completionRatio = parseFloat(record.completion_ratio.toFixed(3));
-      const priceData = getPriceData(record);
-
-      return (
-        <div className='space-y-1'>
-          <div className='text-gray-700'>
-            {t('模型倍率')}：{record.quota_type === 0 ? text : t('无')}
-          </div>
-          <div className='text-gray-700'>
-            {t('补全倍率')}：
-            {record.quota_type === 0 ? completionRatio : t('无')}
-          </div>
-          <div className='text-gray-700'>
-            {t('分组倍率')}：{priceData?.usedGroupRatio ?? '-'}
-          </div>
+          >
+            Copy
+          </Button>
         </div>
-      );
+      ),
+      onFilter: (value, record) =>
+        record.model_name.toLowerCase().includes(value.toLowerCase()),
     },
-  };
-
-  const priceColumn = {
-    title: siteDisplayType === 'TOKENS' ? t('计费摘要') : t('模型价格'),
-    dataIndex: 'model_price',
-    ...(isMobile ? {} : { fixed: 'right' }),
-    render: (text, record, index) => {
-      const priceData = getPriceData(record);
-      const priceItems = getModelPriceItems(priceData, t, siteDisplayType);
-
-      return (
-        <div className='space-y-1'>
-          {priceItems.map((item) => (
-            <div key={item.key} className='text-gray-700'>
-              {item.label} {item.value}
-              {item.suffix}
-            </div>
-          ))}
-        </div>
-      );
+    {
+      title: t('类型'),
+      dataIndex: 'vendor_name',
+      width: 180,
+      render: (_, record) => (
+        <Tag color='green' shape='circle' className='cheapai-model-type-tag'>
+          {getModelType(record)}
+        </Tag>
+      ),
     },
-  };
-
-  const columns = [...baseColumns];
-  columns.push(endpointColumn);
-  if (showRatio) {
-    columns.push(ratioColumn);
-  }
-  columns.push(priceColumn);
-  return columns;
+    {
+      title: t('计费类型'),
+      dataIndex: 'quota_type',
+      width: 160,
+      render: (value) => (
+        <Tag color='grey' shape='circle'>
+          {renderBillingType(value, t)}
+        </Tag>
+      ),
+      sorter: (a, b) => a.quota_type - b.quota_type,
+    },
+    {
+      title: t('价格（输入 / 输出 tokens）'),
+      dataIndex: 'price',
+      width: 260,
+      render: (_, record) => renderPrice(record, getPriceData(record), t),
+    },
+  ];
 };

@@ -17,16 +17,40 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React, { memo } from 'react';
-import PricingVendorIntroWithSkeleton from './PricingVendorIntroWithSkeleton';
-import SearchActions from './SearchActions';
+import React, { memo, useMemo } from 'react';
+import { Input, Skeleton } from '@douyinfe/semi-ui';
+import { IconSearch } from '@douyinfe/semi-icons';
+
+const TAB_CONFIG = [
+  { key: 'all', label: '全部模型', icon: '✦' },
+  { key: 'OpenAI', label: 'OpenAI', icon: '◎' },
+  { key: 'Anthropic', label: 'Anthropic', icon: '◈' },
+  { key: 'Gemini', label: 'Gemini', icon: '◆' },
+  { key: 'Moonshot', label: 'Moonshot', icon: '☾' },
+  { key: 'DeepSeek', label: 'DeepSeek', icon: '◇' },
+  { key: 'MiniMax', label: 'MiniMax', icon: '▣' },
+];
+
+const normalizeVendorName = (value = '') => value.toLowerCase();
+
+const matchVendor = (model, vendorKey) => {
+  if (vendorKey === 'all') return true;
+  const vendorName = normalizeVendorName(model.vendor_name || '');
+  const modelName = normalizeVendorName(model.model_name || '');
+  const target = normalizeVendorName(vendorKey);
+
+  if (target === 'gemini') {
+    return vendorName.includes('google') || modelName.includes('gemini');
+  }
+
+  return vendorName.includes(target) || modelName.includes(target);
+};
 
 const PricingTopSection = memo(
   ({
-    isMobile,
     filterVendor,
-    models,
-    filteredModels,
+    setFilterVendor,
+    models = [],
     loading,
     handleChange,
     handleCompositionStart,
@@ -34,34 +58,67 @@ const PricingTopSection = memo(
     searchValue,
     t,
   }) => {
-    if (isMobile) {
-      return (
-        <div className='w-full'>
-          <SearchActions
-            handleChange={handleChange}
-            handleCompositionStart={handleCompositionStart}
-            handleCompositionEnd={handleCompositionEnd}
-            isMobile={isMobile}
-            searchValue={searchValue}
-            t={t}
-          />
-        </div>
-      );
-    }
+    const tabs = useMemo(
+      () =>
+        TAB_CONFIG.map((tab) => ({
+          ...tab,
+          count:
+            tab.key === 'all'
+              ? models.length
+              : models.filter((model) => matchVendor(model, tab.key)).length,
+        })),
+      [models],
+    );
 
     return (
-      <PricingVendorIntroWithSkeleton
-        loading={loading}
-        filterVendor={filterVendor}
-        models={filteredModels}
-        allModels={models}
-        t={t}
-        handleChange={handleChange}
-        handleCompositionStart={handleCompositionStart}
-        handleCompositionEnd={handleCompositionEnd}
-        isMobile={isMobile}
-        searchValue={searchValue}
-      />
+      <div className='cheapai-pricing-header'>
+        <div className='cheapai-pricing-title-row'>
+          <div>
+            <h1>{t('模型与价格')}</h1>
+            <p>{t('按模型厂商筛选，快速查看输入与输出价格')}</p>
+          </div>
+        </div>
+
+        {loading ? (
+          <Skeleton
+            placeholder={
+              <Skeleton.Title style={{ width: '100%', height: 48 }} />
+            }
+            loading
+            active
+          />
+        ) : (
+          <div className='cheapai-pricing-tabs'>
+            {tabs.map((tab) => {
+              const active = filterVendor === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type='button'
+                  className={`cheapai-pricing-tab ${active ? 'active' : ''}`}
+                  onClick={() => setFilterVendor(tab.key)}
+                >
+                  <span className='cheapai-pricing-tab-icon'>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                  <strong>{tab.count}</strong>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        <Input
+          prefix={<IconSearch />}
+          placeholder={t('搜索模型')}
+          value={searchValue}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
+          onChange={handleChange}
+          showClear
+          size='large'
+          className='pricing-model-search cheapai-pricing-search'
+        />
+      </div>
     );
   },
 );
