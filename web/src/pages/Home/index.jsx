@@ -37,7 +37,7 @@ const footerGroups = [
     title: '产品',
     links: [
       { label: '定价', to: '/pricing' },
-      { label: '文档', href: 'https://aiberm.com' },
+      { label: '文档', href: '#' },
       { label: '面板', to: '/console' },
     ],
   },
@@ -87,6 +87,9 @@ const formatPercent = (value) => {
 };
 
 const getVendorLabel = (model) => model.vendor_name || model.vendor || 'AI';
+
+const normalizePriceSymbol = (value) =>
+  typeof value === 'string' ? value.replace(/\$/g, '￥') : value;
 
 const Home = () => {
   const [noticeVisible, setNoticeVisible] = useState(false);
@@ -221,11 +224,15 @@ const Home = () => {
                 </div>
               ))
             : modelsToShow.map((model) => {
-                const vendor = getVendorLabel(model);
                 const inputPrice =
-                  model.price?.inputPrice || model.price?.price || '-';
+                  normalizePriceSymbol(
+                    model.price?.inputPrice || model.price?.price,
+                  ) || '-';
                 const outputPrice =
-                  model.price?.completionPrice || model.price?.price || '-';
+                  normalizePriceSymbol(
+                    model.price?.completionPrice || model.price?.price,
+                  ) || '-';
+                const vendor = getVendorLabel(model);
                 return (
                   <div className='cheapai-model-card' key={model.model_name}>
                     <div className='cheapai-model-header'>
@@ -236,7 +243,6 @@ const Home = () => {
                       </div>
                       <div>
                         <h3>{model.model_name}</h3>
-                        <p>by {vendor}</p>
                       </div>
                     </div>
                     <div className='cheapai-price-row'>
