@@ -25,8 +25,8 @@ body.sidebar-collapsed {
 }
 
 body {
-  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, 'Microsoft YaHei',
-    sans-serif;
+  font-family: Inter, 'DIN Alternate', 'Rajdhani', 'Segoe UI', 'Helvetica Neue',
+    Arial, 'Microsoft YaHei', sans-serif;
   color: var(--semi-color-text-0);
   background-color: var(--semi-color-bg-0);
 }
@@ -1060,6 +1060,46 @@ body,
 body {
   color: var(--cyber-text);
   background-attachment: fixed;
+  font-feature-settings: 'ss01' 1, 'cv01' 1, 'tnum' 1;
+  letter-spacing: 0.005em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.semi-typography h1,
+.semi-typography h2,
+.semi-typography h3,
+.semi-typography h4,
+.semi-typography h5,
+.semi-typography h6,
+.semi-card-title,
+.semi-modal-title,
+.semi-tabs-tab-button,
+.sidebar-group-label,
+.cyber-logo-title {
+  font-family: 'Rajdhani', 'DIN Alternate', Inter, 'Segoe UI', 'Microsoft YaHei', sans-serif !important;
+  font-weight: 650 !important;
+  letter-spacing: 0.045em;
+}
+
+.semi-button,
+.semi-tag,
+.semi-table,
+.semi-input,
+.semi-select,
+.semi-form-field-label {
+  font-weight: 500;
+}
+
+.text-lg.font-semibold,
+.font-bold,
+.font-semibold,
+.semi-typography strong {
+  font-weight: 650 !important;
 }
 
 body::before {
@@ -2198,4 +2238,263 @@ textarea::placeholder,
   background: var(--cyber-cyan) !important;
   border-color: var(--cyber-cyan) !important;
   box-shadow: 0 0 14px rgba(49, 247, 255, 0.34);
+}
+
+/* ==================== Cyber 布局二次重构 ==================== */
+.cyber-pricing-layout {
+  display: block !important;
+}
+
+.cyber-pricing-content {
+  width: 100% !important;
+  height: calc(100vh - 88px) !important;
+}
+
+.cyber-pricing-top-filters {
+  flex: 0 0 auto;
+  margin: 12px 0;
+  padding: 10px;
+  border: 1px solid rgba(49, 247, 255, 0.18);
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, rgba(49, 247, 255, 0.1), rgba(255, 61, 242, 0.05)),
+    rgba(2, 7, 16, 0.42);
+  box-shadow: inset 0 0 24px rgba(49, 247, 255, 0.04);
+  overflow-x: auto;
+}
+
+.cyber-pricing-filterbar {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  min-width: 0;
+}
+
+.cyber-pricing-filter-title {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  height: 100%;
+  min-height: 96px;
+  flex-direction: column;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  margin-bottom: 0 !important;
+  padding: 12px;
+  border: 1px solid rgba(49, 247, 255, 0.2);
+  border-radius: 18px;
+  background: rgba(3, 8, 18, 0.88);
+}
+
+.cyber-pricing-filter-title > div:first-child {
+  color: var(--cyber-cyan) !important;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.cyber-pricing-filterbar > :not(.cyber-pricing-filter-title) {
+  min-height: 96px;
+  padding: 10px;
+  border: 1px solid rgba(49, 247, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(5, 12, 26, 0.54);
+}
+
+.cyber-pricing-filterbar > :not(.cyber-pricing-filter-title) .flex,
+.cyber-pricing-filterbar > :not(.cyber-pricing-filter-title) [class*='flex-wrap'] {
+  flex-wrap: nowrap !important;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.cyber-pricing-heading-card .semi-card-cover > div {
+  min-height: 86px;
+}
+
+.cyber-pricing-heading-card .semi-card-body {
+  padding-top: 12px !important;
+}
+
+.cyber-pricing-model-count {
+  margin-left: auto;
+  color: #031019 !important;
+  background: linear-gradient(90deg, var(--cyber-cyan), var(--cyber-green)) !important;
+  border-color: transparent !important;
+}
+
+.cyber-pricing-filterbar .sbg-content,
+.cyber-pricing-filterbar .semi-button-content {
+  white-space: nowrap;
+}
+
+.cyber-pricing-model-list {
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px !important;
+}
+
+.cyber-pricing-model-row {
+  width: 100%;
+  min-height: 118px;
+  border-radius: 20px !important;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+
+.cyber-pricing-model-row .semi-card-body {
+  height: 100%;
+}
+
+.cyber-pricing-model-row-inner {
+  display: grid !important;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(260px, 1.1fr) minmax(260px, 0.9fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.cyber-pricing-model-main,
+.cyber-pricing-model-desc,
+.cyber-pricing-model-meta {
+  margin: 0 !important;
+}
+
+.cyber-pricing-model-desc {
+  padding: 12px 16px;
+  border-left: 1px solid rgba(49, 247, 255, 0.14);
+  border-right: 1px solid rgba(49, 247, 255, 0.14);
+}
+
+.cyber-pricing-model-desc p {
+  display: block;
+  max-height: 3.5em;
+  overflow: hidden;
+  font-size: 13px !important;
+}
+
+.cyber-pricing-model-meta {
+  justify-self: stretch;
+}
+
+.cyber-pricing-model-meta > .flex,
+.cyber-pricing-model-meta [class*='grid-cols-3'] {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1180px) {
+  .cyber-pricing-model-row-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .cyber-pricing-model-desc {
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid rgba(49, 247, 255, 0.14);
+    border-bottom: 1px solid rgba(49, 247, 255, 0.14);
+  }
+}
+
+.cyber-stats-console {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 16px;
+}
+
+.cyber-stats-console::before {
+  content: 'DASHBOARD\A TELEMETRY\A STACK';
+  white-space: pre-line;
+  display: flex;
+  align-items: center;
+  min-height: 100%;
+  padding: 22px;
+  border: 1px solid rgba(49, 247, 255, 0.18);
+  border-radius: 24px;
+  color: var(--cyber-green);
+  background:
+    radial-gradient(circle at 100% 0, rgba(49, 247, 255, 0.15), transparent 35%),
+    rgba(3, 8, 18, 0.5);
+  box-shadow: var(--cyber-shadow);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  line-height: 1.55;
+}
+
+.cyber-stats-accordion {
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px !important;
+}
+
+.cyber-stat-group {
+  width: 100%;
+}
+
+.cyber-stat-group .semi-card-header {
+  padding: 8px 12px !important;
+}
+
+.cyber-stat-title {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  border: 0;
+  color: var(--cyber-text);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+}
+
+.cyber-stat-title span {
+  color: var(--cyber-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.cyber-stat-chevron {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(49, 247, 255, 0.22);
+  border-radius: 999px;
+  color: var(--cyber-cyan);
+  background: rgba(49, 247, 255, 0.08);
+}
+
+.cyber-stat-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px !important;
+}
+
+.cyber-stat-item {
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid rgba(49, 247, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(3, 8, 18, 0.34);
+  transition: transform 0.16s ease, border-color 0.16s ease;
+}
+
+.cyber-stat-item:hover {
+  transform: translateX(6px);
+  border-color: rgba(49, 247, 255, 0.42);
+}
+
+@media (max-width: 900px) {
+  .cyber-stats-console {
+    grid-template-columns: 1fr;
+  }
+
+  .cyber-stats-console::before {
+    min-height: auto;
+    font-size: 14px;
+  }
 }

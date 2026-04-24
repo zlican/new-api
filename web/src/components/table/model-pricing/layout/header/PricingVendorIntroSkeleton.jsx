@@ -39,9 +39,7 @@ const THEME_COLORS = {
 
 const SIZES = {
   title: { width: { all: 120, specific: 100 }, height: 24 },
-  tag: { width: 80, height: 20 },
-  description: { height: 14 },
-  avatar: { width: 40, height: 40 },
+  tag: { width: 120, height: 28 },
   searchInput: { height: 32 },
   button: { width: 80, height: 32 },
 };
@@ -64,21 +62,6 @@ const SKELETON_STYLES = {
     borderRadius: 9999,
     backdropFilter: 'blur(4px)',
     border: '1px solid rgba(255,255,255,0.3)',
-  },
-  description: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 4,
-    backdropFilter: 'blur(4px)',
-  },
-  avatar: (isAllVendors) => {
-    const colors = isAllVendors
-      ? THEME_COLORS.allVendors
-      : THEME_COLORS.specific;
-    return {
-      backgroundColor: colors.background,
-      borderRadius: 12,
-      border: `1px solid ${colors.border}`,
-    };
   },
   searchInput: {
     backgroundColor: THEME_COLORS.neutral.background,
@@ -123,46 +106,17 @@ const PricingVendorIntroSkeleton = memo(
                     },
                     'title',
                   )}
-                  {createSkeletonRect(
-                    {
-                      ...SKELETON_STYLES.tag,
-                      width: SIZES.tag.width,
-                      height: SIZES.tag.height,
-                    },
-                    'tag',
-                  )}
-                </div>
-                <div className='space-y-2'>
-                  {createSkeletonRect(
-                    {
-                      ...SKELETON_STYLES.description,
-                      width: '100%',
-                      height: SIZES.description.height,
-                    },
-                    'desc1',
-                  )}
-                  {createSkeletonRect(
-                    {
-                      ...SKELETON_STYLES.description,
-                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                      width: '75%',
-                      height: SIZES.description.height,
-                    },
-                    'desc2',
-                  )}
                 </div>
               </div>
 
-              <div className='flex-shrink-0 w-16 h-16 rounded-2xl bg-white/90 shadow-md backdrop-blur-sm flex items-center justify-center'>
-                {createSkeletonRect(
-                  {
-                    ...SKELETON_STYLES.avatar(isAllVendors),
-                    width: SIZES.avatar.width,
-                    height: SIZES.avatar.height,
-                  },
-                  'avatar',
-                )}
-              </div>
+              {createSkeletonRect(
+                {
+                  ...SKELETON_STYLES.tag,
+                  width: SIZES.tag.width,
+                  height: SIZES.tag.height,
+                },
+                'count-tag',
+              )}
             </div>
           </div>
         }

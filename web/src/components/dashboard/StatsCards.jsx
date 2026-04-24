@@ -17,8 +17,9 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 For commercial licensing, please contact support@quantumnous.com
 */
 
-import React from 'react';
-import { Card, Avatar, Skeleton, Tag } from '@douyinfe/semi-ui';
+import React, { useMemo, useState } from 'react';
+import { Avatar, Card, Collapsible, Skeleton, Tag } from '@douyinfe/semi-ui';
+import { IconChevronDown, IconChevronUp } from '@douyinfe/semi-icons';
 import { VChart } from '@visactor/react-vchart';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -32,21 +33,53 @@ const StatsCards = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const initialOpenState = useMemo(() => {
+    const state = {};
+    groupedStatsData.forEach((_, index) => {
+      state[index] = index === 0;
+    });
+    return state;
+  }, [groupedStatsData]);
+  const [openGroups, setOpenGroups] = useState(initialOpenState);
+
+  const toggleGroup = (index) => {
+    setOpenGroups((prev) => ({
+      ...prev,
+      [index]: !(prev[index] ?? index === 0),
+    }));
+  };
+
   return (
-    <div className='mb-4'>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+    <div className='cyber-stats-console mb-4'>
+      <div className='cyber-stats-accordion grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
         {groupedStatsData.map((group, idx) => (
           <Card
             key={idx}
             {...CARD_PROPS}
-            className={`${group.color} border-0 !rounded-2xl w-full`}
-            title={group.title}
+            className={`cyber-stat-group ${group.color} border-0 !rounded-2xl w-full`}
+            title={
+              <button
+                type='button'
+                className='cyber-stat-title'
+                onClick={() => toggleGroup(idx)}
+              >
+                <span>{group.title}</span>
+                <span className='cyber-stat-chevron'>
+                  {openGroups[idx] ?? idx === 0 ? (
+                    <IconChevronUp />
+                  ) : (
+                    <IconChevronDown />
+                  )}
+                </span>
+              </button>
+            }
           >
-            <div className='space-y-4'>
+            <Collapsible isOpen={openGroups[idx] ?? idx === 0} keepDOM>
+            <div className='cyber-stat-items space-y-4'>
               {group.items.map((item, itemIdx) => (
                 <div
                   key={itemIdx}
-                  className='flex items-center justify-between cursor-pointer'
+                  className='cyber-stat-item flex items-center justify-between cursor-pointer'
                   onClick={item.onClick}
                 >
                   <div className='flex items-center'>
@@ -106,6 +139,7 @@ const StatsCards = ({
                 </div>
               ))}
             </div>
+            </Collapsible>
           </Card>
         ))}
       </div>

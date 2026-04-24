@@ -19,11 +19,7 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import PricingDisplaySettings from '../../filter/PricingDisplaySettings';
-import PricingGroups from '../../filter/PricingGroups';
-import PricingQuotaTypes from '../../filter/PricingQuotaTypes';
-import PricingEndpointTypes from '../../filter/PricingEndpointTypes';
 import PricingVendors from '../../filter/PricingVendors';
-import PricingTags from '../../filter/PricingTags';
 import { usePricingFilterCounts } from '../../../../../hooks/model-pricing/usePricingFilterCounts';
 
 const FilterModalContent = ({ sidebarProps, t }) => {
@@ -56,11 +52,7 @@ const FilterModalContent = ({ sidebarProps, t }) => {
   } = sidebarProps;
 
   const {
-    quotaTypeModels,
-    endpointTypeModels,
     vendorModels,
-    tagModels,
-    groupCountModels,
   } = usePricingFilterCounts({
     models: categoryProps.models,
     filterGroup,
@@ -98,41 +90,6 @@ const FilterModalContent = ({ sidebarProps, t }) => {
         t={t}
       />
 
-      <PricingGroups
-        filterGroup={filterGroup}
-        setFilterGroup={setFilterGroup}
-        usableGroup={categoryProps.usableGroup}
-        groupRatio={categoryProps.groupRatio}
-        models={groupCountModels}
-        loading={loading}
-        t={t}
-      />
-
-      <PricingQuotaTypes
-        filterQuotaType={filterQuotaType}
-        setFilterQuotaType={setFilterQuotaType}
-        models={quotaTypeModels}
-        loading={loading}
-        t={t}
-      />
-
-      <PricingTags
-        filterTag={filterTag}
-        setFilterTag={setFilterTag}
-        models={tagModels}
-        allModels={categoryProps.models}
-        loading={loading}
-        t={t}
-      />
-
-      <PricingEndpointTypes
-        filterEndpointType={filterEndpointType}
-        setFilterEndpointType={setFilterEndpointType}
-        models={endpointTypeModels}
-        allModels={categoryProps.models}
-        loading={loading}
-        t={t}
-      />
     </>
   );
 };

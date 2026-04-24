@@ -22,11 +22,11 @@ import SelectableButtonGroup from '../../../common/ui/SelectableButtonGroup';
 import { getLobeHubIcon } from '../../../../helpers';
 
 /**
- * 供应商筛选组件
+ * 模型筛选组件
  * @param {string|'all'} filterVendor 当前值
  * @param {Function} setFilterVendor setter
  * @param {Array} models 模型列表
- * @param {Array} allModels 所有模型列表（用于获取全部供应商）
+ * @param {Array} allModels 所有模型列表（用于获取全部模型来源）
  * @param {boolean} loading 是否加载中
  * @param {Function} t i18n
  */
@@ -38,7 +38,7 @@ const PricingVendors = ({
   loading = false,
   t,
 }) => {
-  // 获取系统中所有供应商（基于 allModels，如果未提供则退化为 models）
+  // 获取系统中所有模型来源（基于 allModels，如果未提供则退化为 models）
   const getAllVendors = React.useMemo(() => {
     const vendors = new Set();
     const vendorIcons = new Map();
@@ -62,7 +62,7 @@ const PricingVendors = ({
     };
   }, [allModels, models]);
 
-  // 计算每个供应商的模型数量（基于当前过滤后的 models）
+  // 计算每个模型来源的模型数量（基于当前过滤后的 models）
   const getVendorCount = React.useCallback(
     (vendor) => {
       if (vendor === 'all') {
@@ -76,17 +76,17 @@ const PricingVendors = ({
     [models],
   );
 
-  // 生成供应商选项
+  // 生成模型选项
   const items = React.useMemo(() => {
     const result = [
       {
         value: 'all',
-        label: t('全部供应商'),
+        label: t('全部模型'),
         tagCount: getVendorCount('all'),
       },
     ];
 
-    // 添加所有已知供应商
+    // 添加所有已知模型来源
     getAllVendors.vendors.forEach((vendor) => {
       const count = getVendorCount(vendor);
       const icon = getAllVendors.vendorIcons.get(vendor);
@@ -98,12 +98,12 @@ const PricingVendors = ({
       });
     });
 
-    // 如果系统中存在未知供应商，添加"未知供应商"选项
+    // 如果系统中存在未知模型来源，添加"未知模型"选项
     if (getAllVendors.hasUnknownVendor) {
       const count = getVendorCount('unknown');
       result.push({
         value: 'unknown',
-        label: t('未知供应商'),
+        label: t('未知模型'),
         tagCount: count,
       });
     }
@@ -113,7 +113,7 @@ const PricingVendors = ({
 
   return (
     <SelectableButtonGroup
-      title={t('供应商')}
+      title={t('模型')}
       items={items}
       activeValue={filterVendor}
       onChange={setFilterVendor}

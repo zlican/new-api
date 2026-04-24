@@ -18,6 +18,7 @@ For commercial licensing, please contact support@quantumnous.com
 */
 
 import React from 'react';
+import PricingSidebar from '../PricingSidebar';
 import PricingTopSection from '../header/PricingTopSection';
 import PricingView from './PricingView';
 
@@ -43,6 +44,10 @@ const PricingContent = ({ isMobile, sidebarProps, ...props }) => {
           tokenUnit={sidebarProps.tokenUnit}
           setTokenUnit={sidebarProps.setTokenUnit}
         />
+      </div>
+
+      <div className='cyber-pricing-top-filters pricing-scroll-hide'>
+        <PricingSidebar {...sidebarProps} />
       </div>
 
       {/* 可滚动的内容区域 */}

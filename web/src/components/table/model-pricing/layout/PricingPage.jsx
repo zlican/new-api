@@ -19,7 +19,6 @@ For commercial licensing, please contact support@quantumnous.com
 
 import React from 'react';
 import { Layout, ImagePreview } from '@douyinfe/semi-ui';
-import PricingSidebar from './PricingSidebar';
 import PricingContent from './content/PricingContent';
 import ModelDetailSideSheet from '../modal/ModelDetailSideSheet';
 import { useModelPricingData } from '../../../../hooks/model-pricing/useModelPricingData';
@@ -27,7 +26,7 @@ import { useIsMobile } from '../../../../hooks/common/useIsMobile';
 
 const PricingPage = () => {
   const pricingData = useModelPricingData();
-  const { Sider, Content } = Layout;
+  const { Content } = Layout;
   const isMobile = useIsMobile();
   const [showRatio, setShowRatio] = React.useState(false);
   const [viewMode, setViewMode] = React.useState('card');
@@ -42,12 +41,6 @@ const PricingPage = () => {
   return (
     <div className='cyber-pricing-page bg-white'>
       <Layout className='cyber-pricing-layout pricing-layout'>
-        {!isMobile && (
-          <Sider className='cyber-pricing-sidebar pricing-scroll-hide pricing-sidebar'>
-            <PricingSidebar {...allProps} />
-          </Sider>
-        )}
-
         <Content className='cyber-pricing-content pricing-scroll-hide pricing-content'>
           <PricingContent
             {...allProps}
