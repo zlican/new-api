@@ -65,7 +65,7 @@ const StatsCards = ({
               >
                 <span>{group.title}</span>
                 <span className='cyber-stat-chevron'>
-                  {openGroups[idx] ?? true ? (
+                  {(openGroups[idx] ?? true) ? (
                     <IconChevronUp />
                   ) : (
                     <IconChevronDown />
@@ -76,61 +76,63 @@ const StatsCards = ({
           >
             <Collapsible isOpen={openGroups[idx] ?? true} keepDOM>
               <div className='cyber-stat-items grid grid-cols-1 sm:grid-cols-2 gap-3'>
-              {group.items.map((item, itemIdx) => (
-                <div
-                  key={itemIdx}
-                  className='cyber-stat-item flex items-center justify-between cursor-pointer'
-                  onClick={item.onClick}
-                >
-                  <div className='flex items-center min-w-0'>
-                    <div>
-                      <div className='text-xs text-gray-500'>{item.title}</div>
-                      <div className='text-lg font-semibold'>
-                        <Skeleton
-                          loading={loading}
-                          active
-                          placeholder={
-                            <Skeleton.Paragraph
-                              active
-                              rows={1}
-                              style={{
-                                width: '65px',
-                                height: '24px',
-                                marginTop: '4px',
-                              }}
-                            />
-                          }
-                        >
-                          {item.value}
-                        </Skeleton>
+                {group.items.map((item, itemIdx) => (
+                  <div
+                    key={itemIdx}
+                    className='cyber-stat-item flex items-center justify-between cursor-pointer'
+                    onClick={item.onClick}
+                  >
+                    <div className='flex items-center min-w-0'>
+                      <div>
+                        <div className='text-xs text-gray-500'>
+                          {item.title}
+                        </div>
+                        <div className='text-lg font-normal'>
+                          <Skeleton
+                            loading={loading}
+                            active
+                            placeholder={
+                              <Skeleton.Paragraph
+                                active
+                                rows={1}
+                                style={{
+                                  width: '65px',
+                                  height: '24px',
+                                  marginTop: '4px',
+                                }}
+                              />
+                            }
+                          >
+                            {item.value}
+                          </Skeleton>
+                        </div>
                       </div>
                     </div>
+                    {item.title === t('当前余额') ? (
+                      <Tag
+                        color='white'
+                        shape='circle'
+                        size='large'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate('/console/topup');
+                        }}
+                      >
+                        {t('充值')}
+                      </Tag>
+                    ) : (
+                      (loading ||
+                        (item.trendData && item.trendData.length > 0)) && (
+                        <div className='w-24 h-10'>
+                          <VChart
+                            spec={getTrendSpec(item.trendData, item.trendColor)}
+                            option={CHART_CONFIG}
+                          />
+                        </div>
+                      )
+                    )}
                   </div>
-                  {item.title === t('当前余额') ? (
-                    <Tag
-                      color='white'
-                      shape='circle'
-                      size='large'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate('/console/topup');
-                      }}
-                    >
-                      {t('充值')}
-                    </Tag>
-                  ) : (
-                    (loading ||
-                      (item.trendData && item.trendData.length > 0)) && (
-                      <div className='w-24 h-10'>
-                        <VChart
-                          spec={getTrendSpec(item.trendData, item.trendColor)}
-                          option={CHART_CONFIG}
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
-              ))}
+                ))}
               </div>
             </Collapsible>
           </Card>

@@ -203,8 +203,18 @@ const Home = () => {
       <section className='cheapai-hero'>
         <div className='cheapai-hero-content'>
           <div className='cheapai-badge'>CheapAI API Platform</div>
-          <h1>让所有人使用上更 Cheap 的 AI</h1>
-          <p>为开发者提供有折扣的 AI API，统一接入，透明定价。</p>
+          <div className='cheapai-hero-lines'>
+            <p>
+              <span className='cheapai-type-line cheapai-type-line-primary'>
+                让所有人使用上更 Cheap 的 AI
+              </span>
+            </p>
+            <p>
+              <span className='cheapai-type-line cheapai-type-line-secondary'>
+                为开发者提供有折扣的 AI API，统一接入，透明定价。
+              </span>
+            </p>
+          </div>
         </div>
       </section>
 
@@ -247,12 +257,12 @@ const Home = () => {
                     </div>
                     <div className='cheapai-price-row'>
                       <span>Input</span>
-                      <strong>{inputPrice}</strong>
+                      <span className='cheapai-price-value'>{inputPrice}</span>
                       {model.discount && <em>{model.discount}</em>}
                     </div>
                     <div className='cheapai-price-row'>
                       <span>Output</span>
-                      <strong>{outputPrice}</strong>
+                      <span className='cheapai-price-value'>{outputPrice}</span>
                       {model.discount && <em>{model.discount}</em>}
                     </div>
                     <div className='cheapai-token-unit'>/ 百万 tokens</div>

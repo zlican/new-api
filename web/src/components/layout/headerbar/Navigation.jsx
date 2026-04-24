@@ -30,8 +30,8 @@ const Navigation = ({
 }) => {
   const renderNavLinks = () => {
     const baseClasses =
-      'flex-shrink-0 flex items-center gap-1 font-semibold rounded-md transition-all duration-200 ease-in-out';
-    const hoverClasses = 'hover:text-semi-color-primary';
+      'cyber-nav-link flex-shrink-0 flex items-center gap-1 rounded-md transition-all duration-200 ease-in-out';
+    const hoverClasses = 'hover:text-sky-200';
     const spacingClasses = isMobile ? 'p-1' : 'p-2';
 
     const commonLinkClasses = `${baseClasses} ${spacingClasses} ${hoverClasses}`;
@@ -70,7 +70,7 @@ const Navigation = ({
   };
 
   return (
-    <nav className='flex flex-1 items-center gap-1 lg:gap-2 mx-2 md:mx-4 overflow-x-auto whitespace-nowrap scrollbar-hide'>
+    <nav className='cyber-nav-center flex flex-1 items-center justify-center gap-1 lg:gap-2 mx-2 md:mx-4 overflow-x-auto whitespace-nowrap scrollbar-hide'>
       <SkeletonWrapper
         loading={isLoading}
         type='navigation'

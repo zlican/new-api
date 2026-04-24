@@ -119,23 +119,7 @@ export const useDashboardData = (userState, userDispatch, statusState) => {
     return { avgRPM, avgTPM, timeDiff };
   }, [times, consumeTokens, inputs.start_timestamp, inputs.end_timestamp]);
 
-  const getGreeting = useMemo(() => {
-    const hours = new Date().getHours();
-    let greeting = '';
-
-    if (hours >= 5 && hours < 12) {
-      greeting = t('早上好');
-    } else if (hours >= 12 && hours < 14) {
-      greeting = t('中午好');
-    } else if (hours >= 14 && hours < 18) {
-      greeting = t('下午好');
-    } else {
-      greeting = t('晚上好');
-    }
-
-    const username = userState?.user?.username || '';
-    return `👋${greeting}，${username}`;
-  }, [t, userState?.user?.username]);
+  const getGreeting = useMemo(() => '', []);
 
   // ========== 回调函数 ==========
   const handleInputChange = useCallback((value, name) => {

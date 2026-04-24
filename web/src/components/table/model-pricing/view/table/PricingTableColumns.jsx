@@ -66,13 +66,17 @@ const renderPrice = (record, priceData, t) => {
     return (
       <div className='cheapai-price-stack'>
         <div>
-          <strong>{priceData.inputPrice || '-'}</strong>
+          <span className='cheapai-price-value'>
+            {priceData.inputPrice || '-'}
+          </span>
           <span>
             / {unit} {t('输入 tokens')}
           </span>
         </div>
         <div>
-          <strong>{priceData.completionPrice || '-'}</strong>
+          <span className='cheapai-price-value'>
+            {priceData.completionPrice || '-'}
+          </span>
           <span>
             / {unit} {t('输出 tokens')}
           </span>
@@ -84,7 +88,7 @@ const renderPrice = (record, priceData, t) => {
   return (
     <div className='cheapai-price-stack'>
       <div>
-        <strong>{priceData.price || '-'}</strong>
+        <span className='cheapai-price-value'>{priceData.price || '-'}</span>
         <span>/ {t('次')}</span>
       </div>
     </div>

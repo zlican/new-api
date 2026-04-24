@@ -1227,6 +1227,44 @@ body:not(.sidebar-collapsed) .app-content-shell::before {
   position: relative;
 }
 
+.cyber-nav-center {
+  position: absolute;
+  left: 50%;
+  width: min(460px, 48vw);
+  transform: translateX(-50%);
+}
+
+.cyber-nav-link {
+  position: relative;
+  padding-inline: 12px !important;
+  color: rgba(226, 232, 240, 0.74) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.08em;
+}
+
+.cyber-nav-link::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(125, 211, 252, 0.48);
+  box-shadow: 0 0 12px rgba(125, 211, 252, 0.45);
+}
+
+.cyber-nav-link:hover {
+  color: #bae6fd !important;
+  background: rgba(14, 165, 233, 0.08) !important;
+}
+
+@media (max-width: 900px) {
+  .cyber-nav-center {
+    position: static;
+    width: auto;
+    transform: none;
+    justify-content: flex-start;
+  }
+}
+
 .cyber-logo {
   padding: 6px 10px;
   border: 1px solid rgba(49, 247, 255, 0.2);
@@ -2838,6 +2876,12 @@ textarea::placeholder,
 }
 
 /* CheapAI landing page */
+@property --cheapai-card-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 .cheapai-home {
   color: #e5e7eb;
   background:
@@ -2859,7 +2903,7 @@ textarea::placeholder,
 
 .cheapai-hero-content {
   width: min(1080px, 100%);
-  text-align: center;
+  text-align: left;
 }
 
 .cheapai-badge {
@@ -2874,21 +2918,93 @@ textarea::placeholder,
   letter-spacing: 0.08em;
 }
 
-.cheapai-hero h1 {
-  margin: 24px auto 16px;
-  max-width: 860px;
-  color: #f8fafc;
-  font-size: clamp(42px, 7vw, 82px);
-  line-height: 1.02;
-  font-weight: 900;
-  letter-spacing: -0.06em;
+.cheapai-hero-lines {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  max-width: 880px;
+  margin: 28px auto 0;
+  padding-left: 24px;
 }
 
-.cheapai-hero p {
-  margin: 0 auto;
-  max-width: 680px;
+.cheapai-hero-lines::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #38bdf8, #2563eb, #22d3ee);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.55);
+}
+
+.cheapai-hero-lines p {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(24px, 4.2vw, 52px);
+  line-height: 1.12;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.cheapai-hero-lines p + p {
   color: #94a3b8;
   font-size: clamp(16px, 2vw, 22px);
+  letter-spacing: 0;
+}
+
+.cheapai-type-line {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  max-width: max-content;
+  white-space: nowrap;
+  border-right: 1px solid rgba(125, 211, 252, 0.9);
+  filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.12));
+}
+
+.cheapai-type-line-primary {
+  width: 0;
+  animation:
+    cheapai-type-primary 2.3s steps(22, end) 0.25s forwards,
+    cheapai-caret 0.72s step-end infinite;
+}
+
+.cheapai-type-line-secondary {
+  width: 0;
+  animation:
+    cheapai-type-secondary 3.1s steps(28, end) 1.8s forwards,
+    cheapai-caret 0.72s step-end infinite;
+}
+
+@keyframes cheapai-type-primary {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes cheapai-type-secondary {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes cheapai-caret {
+  0%,
+  45% {
+    border-color: rgba(125, 211, 252, 0.95);
+  }
+  46%,
+  100% {
+    border-color: transparent;
+  }
 }
 
 .cheapai-actions {
@@ -2966,12 +3082,12 @@ textarea::placeholder,
 .cheapai-section-title h2 {
   color: #f8fafc;
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .cheapai-section-title a {
   color: #7dd3fc;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .cheapai-model-grid {
@@ -2981,13 +3097,61 @@ textarea::placeholder,
 }
 
 .cheapai-model-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 22px;
-  border: 1px solid rgba(125, 211, 252, 0.18);
+  border: 1px solid rgba(125, 211, 252, 0.16);
   border-radius: 28px;
   background:
     linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.88)),
     radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.18), transparent 40%);
   box-shadow: 0 24px 80px rgba(2, 6, 23, 0.28);
+}
+
+.cheapai-model-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--cheapai-card-angle, 0deg),
+    rgba(56, 189, 248, 0.08),
+    rgba(56, 189, 248, 0.5),
+    rgba(37, 99, 235, 0.12),
+    rgba(34, 211, 238, 0.38),
+    rgba(56, 189, 248, 0.08)
+  );
+  opacity: 0.58;
+  animation: cheapai-card-border-spin 7s linear infinite;
+}
+
+.cheapai-model-card::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: 27px;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.94), rgba(2, 6, 23, 0.93)),
+    radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.16), transparent 42%);
+}
+
+@keyframes cheapai-card-border-spin {
+  to {
+    --cheapai-card-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cheapai-type-line,
+  .cheapai-type-line-primary,
+  .cheapai-type-line-secondary,
+  .cheapai-model-card::before {
+    width: auto;
+    animation: none !important;
+  }
 }
 
 .cheapai-model-header {
@@ -3007,14 +3171,14 @@ textarea::placeholder,
   color: #7dd3fc;
   background: rgba(15, 23, 42, 0.88);
   border: 1px solid rgba(148, 163, 184, 0.16);
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .cheapai-model-header h3 {
   margin: 0;
   color: #f8fafc;
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .cheapai-model-header p {
@@ -3048,7 +3212,7 @@ textarea::placeholder,
   background: rgba(22, 163, 74, 0.16);
   font-size: 12px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .cheapai-token-unit {
@@ -3074,7 +3238,7 @@ textarea::placeholder,
   margin: 0 0 10px;
   color: #f8fafc;
   font-size: 30px;
-  font-weight: 900;
+  font-weight: 400;
 }
 
 .cheapai-footer-brand p,
@@ -3199,9 +3363,9 @@ textarea::placeholder,
 .cheapai-pricing-title-row h1 {
   margin: 0;
   color: #f8fafc;
-  font-size: clamp(28px, 3vw, 40px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 .cheapai-pricing-title-row p {
@@ -3256,13 +3420,15 @@ textarea::placeholder,
   background: rgba(14, 165, 233, 0.16);
 }
 
-.cheapai-pricing-tab strong {
+.cheapai-pricing-tab strong,
+.cheapai-tab-count {
   min-width: 26px;
   padding: 2px 8px;
   border-radius: 999px;
   color: #dbeafe;
   background: rgba(30, 41, 59, 0.92);
   font-size: 12px;
+  font-weight: 400;
 }
 
 .cheapai-pricing-search {
@@ -3504,6 +3670,47 @@ textarea::placeholder,
   min-width: 36px;
   height: 20px;
   padding: 0 8px;
+}
+
+/* CheapAI light cyber typography pass */
+.cheapai-home h1,
+.cheapai-home h2,
+.cheapai-home h3,
+.cheapai-home strong,
+.cheapai-home .font-bold,
+.cheapai-home .font-semibold,
+.cheapai-home .font-medium,
+.cheapai-pricing-page h1,
+.cheapai-pricing-page h2,
+.cheapai-pricing-page h3,
+.cheapai-pricing-page strong,
+.cheapai-pricing-page .font-bold,
+.cheapai-pricing-page .font-semibold,
+.cheapai-pricing-page .font-medium,
+.cheapai-panel-card strong,
+.cheapai-panel-card .font-bold,
+.cheapai-panel-card .font-semibold,
+.cheapai-panel-card .font-medium,
+.cyber-header .font-semibold,
+.cyber-header .font-medium,
+.cyber-header strong {
+  font-weight: 400 !important;
+}
+
+.cheapai-model-name-copy,
+.cheapai-price-stack strong,
+.cheapai-price-row strong,
+.cheapai-pricing-tab strong,
+.cheapai-section-logo,
+.cheapai-profile-logo,
+.cheapai-text-logo,
+.cheapai-tab-text-logo,
+.cheapai-input-text-logo {
+  font-weight: 400 !important;
+}
+
+.cyber-dashboard-spacer {
+  min-height: 1px;
 }
 
 @media (max-width: 768px) {

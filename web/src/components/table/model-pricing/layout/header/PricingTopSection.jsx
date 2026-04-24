@@ -100,7 +100,7 @@ const PricingTopSection = memo(
                 >
                   <span className='cheapai-pricing-tab-icon'>{tab.icon}</span>
                   <span>{tab.label}</span>
-                  <strong>{tab.count}</strong>
+                  <span className='cheapai-tab-count'>{tab.count}</span>
                 </button>
               );
             })}
